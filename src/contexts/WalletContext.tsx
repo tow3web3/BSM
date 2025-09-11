@@ -44,21 +44,10 @@ interface WalletProviderProps {
   children: ReactNode;
 }
 
-export function SolanaWalletProvider({ children }: WalletProviderProps) {
+// Composant pour fournir le contexte wallet
+function WalletContextProvider({ children }: WalletProviderProps) {
   const { publicKey, connected, connecting, disconnect: disconnectAdapter, signMessage: signMessageAdapter } = useWalletAdapter();
   const [_encryptionKey, setEncryptionKey] = useState<Uint8Array | null>(null);
-
-  const network = WalletAdapterNetwork.Devnet;
-  const endpoint = clusterApiUrl(network);
-
-  const wallets = [
-    new PhantomWalletAdapter(),
-    new SolflareWalletAdapter(),
-    new TrustWalletAdapter(),
-    new CoinbaseWalletAdapter(),
-    new SolongWalletAdapter(),
-    new TorusWalletAdapter(),
-  ];
 
   useEffect(() => {
     if (!connected) {
@@ -131,12 +120,33 @@ export function SolanaWalletProvider({ children }: WalletProviderProps) {
   };
 
   return (
+    <WalletContext.Provider value={value}>
+      {children}
+    </WalletContext.Provider>
+  );
+}
+
+// Provider principal qui configure les wallets
+export function SolanaWalletProvider({ children }: WalletProviderProps) {
+  const network = WalletAdapterNetwork.Devnet;
+  const endpoint = clusterApiUrl(network);
+
+  const wallets = [
+    new PhantomWalletAdapter(),
+    new SolflareWalletAdapter(),
+    new TrustWalletAdapter(),
+    new CoinbaseWalletAdapter(),
+    new SolongWalletAdapter(),
+    new TorusWalletAdapter(),
+  ];
+
+  return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          <WalletContext.Provider value={value}>
+          <WalletContextProvider>
             {children}
-          </WalletContext.Provider>
+          </WalletContextProvider>
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
