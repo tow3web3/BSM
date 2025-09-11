@@ -8,10 +8,10 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
-  GlowWalletAdapter,
   TrustWalletAdapter,
   CoinbaseWalletAdapter,
-  SlopeWalletAdapter,
+  SolongWalletAdapter,
+  TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 import { PublicKey } from '@solana/web3.js';
@@ -54,10 +54,10 @@ export function SolanaWalletProvider({ children }: WalletProviderProps) {
   const wallets = [
     new PhantomWalletAdapter(),
     new SolflareWalletAdapter(),
-    new GlowWalletAdapter(),
     new TrustWalletAdapter(),
     new CoinbaseWalletAdapter(),
-    new SlopeWalletAdapter(),
+    new SolongWalletAdapter(),
+    new TorusWalletAdapter(),
   ];
 
   useEffect(() => {
