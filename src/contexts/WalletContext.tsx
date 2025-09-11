@@ -8,7 +8,6 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
-  BackpackWalletAdapter,
   GlowWalletAdapter,
   TrustWalletAdapter,
   CoinbaseWalletAdapter,
@@ -55,7 +54,6 @@ export function SolanaWalletProvider({ children }: WalletProviderProps) {
   const wallets = [
     new PhantomWalletAdapter(),
     new SolflareWalletAdapter(),
-    new BackpackWalletAdapter(),
     new GlowWalletAdapter(),
     new TrustWalletAdapter(),
     new CoinbaseWalletAdapter(),
