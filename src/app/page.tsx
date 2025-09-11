@@ -123,9 +123,9 @@ export default function Home() {
               
               {/* Follow Us Button */}
               <a
-                href="#"
-            target="_blank"
-            rel="noopener noreferrer"
+                href="https://x.com/SolanaMail_web3"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="relative group bg-gray-800 border border-gray-700 px-4 py-2 hover:border-gray-600 transition-colors"
               >
                 <div className="flex items-center">
@@ -533,7 +533,7 @@ export default function Home() {
                 {/* Animated Text */}
                 <div className="relative">
                   <div className="text-lg font-mono text-cyan-400 tracking-wider animate-typewriter">
-                    CA: 8BVgid3GzQGgyoeTs8QZmwMWGbdqfm9EAVRQFueSpump
+                    CA: TBA
                   </div>
                   
                   {/* Cursor Animation */}
@@ -543,7 +543,7 @@ export default function Home() {
                 {/* Copy Button */}
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText('8BVgid3GzQGgyoeTs8QZmwMWGbdqfm9EAVRQFueSpump');
+                    navigator.clipboard.writeText('TBA');
                     // You could add a toast notification here
                   }}
                   className="mt-6 bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center mx-auto"
