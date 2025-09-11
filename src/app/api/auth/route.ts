@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     let walletPublicKey: PublicKey;
     try {
       walletPublicKey = new PublicKey(publicKey);
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: 'Invalid wallet address' },
         { status: 400 }
@@ -48,8 +48,8 @@ export async function POST(request: NextRequest) {
         publicKey: publicKey,
       },
     });
-  } catch (error) {
-    console.error('Erreur lors de l\'authentification:', error);
+  } catch (err) {
+    console.error('Erreur lors de l\'authentification:', err);
     return NextResponse.json(
       { error: 'Erreur interne du serveur' },
       { status: 500 }
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     // Vérifier que l'adresse est valide
     try {
       new PublicKey(walletAddress);
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: 'Invalid wallet address' },
         { status: 400 }
@@ -87,8 +87,8 @@ export async function GET(request: NextRequest) {
       success: true,
       message: authMessage,
     });
-  } catch (error) {
-    console.error('Erreur lors de la génération du message d\'auth:', error);
+  } catch (err) {
+    console.error('Erreur lors de la génération du message d\'auth:', err);
     return NextResponse.json(
       { error: 'Erreur interne du serveur' },
       { status: 500 }

@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     // Vérifier que l'adresse est valide
     try {
       new PublicKey(walletAddress);
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: 'Invalid wallet address' },
         { status: 400 }
@@ -53,8 +53,8 @@ export async function GET(request: NextRequest) {
         createdAt: msg.createdAt,
       })),
     });
-  } catch (error) {
-    console.error('Erreur lors de la récupération des messages:', error);
+  } catch (err) {
+    console.error('Erreur lors de la récupération des messages:', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     try {
       new PublicKey(fromWallet);
       new PublicKey(toWallet);
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: 'Invalid wallet addresses' },
         { status: 400 }
@@ -104,8 +104,8 @@ export async function POST(request: NextRequest) {
         createdAt: message.createdAt,
       },
     });
-  } catch (error) {
-    console.error('Erreur lors de l\'enregistrement du message:', error);
+  } catch (err) {
+    console.error('Erreur lors de l\'enregistrement du message:', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

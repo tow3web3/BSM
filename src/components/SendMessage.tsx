@@ -204,7 +204,7 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
           <div>
             <h4 className="text-sm font-semibold text-white mb-1">End-to-End Encrypted</h4>
             <p className="text-xs text-gray-400">
-              Your message is encrypted with the recipient's wallet signature. Only they can decrypt and read it.
+              Your message is encrypted with the recipient&apos;s wallet signature. Only they can decrypt and read it.
             </p>
           </div>
         </div>

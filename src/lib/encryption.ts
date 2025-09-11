@@ -51,7 +51,7 @@ export function encryptMessage(
 export function encryptMessageForWallet(
   message: string,
   recipientWalletAddress: string,
-  senderWalletAddress: string
+  _senderWalletAddress: string
 ): {
   ciphertext: string;
   nonce: string;

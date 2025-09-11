@@ -16,7 +16,7 @@ import {
 import { clusterApiUrl } from '@solana/web3.js';
 import { PublicKey } from '@solana/web3.js';
 import { generateEncryptionKey } from '@/lib/solana-auth';
-import { decryptMessage, decryptMessageWithWallet } from '@/lib/encryption';
+import { decryptMessageWithWallet } from '@/lib/encryption';
 
 // Import des styles du wallet adapter
 import '@solana/wallet-adapter-react-ui/styles.css';
@@ -46,7 +46,7 @@ interface WalletProviderProps {
 
 export function SolanaWalletProvider({ children }: WalletProviderProps) {
   const { publicKey, connected, connecting, disconnect: disconnectAdapter, signMessage: signMessageAdapter } = useWalletAdapter();
-  const [encryptionKey, setEncryptionKey] = useState<Uint8Array | null>(null);
+  const [_encryptionKey, setEncryptionKey] = useState<Uint8Array | null>(null);
 
   const network = WalletAdapterNetwork.Devnet;
   const endpoint = clusterApiUrl(network);

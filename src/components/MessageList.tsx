@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useWallet } from '@/contexts/WalletContext';
 
 interface Message {
@@ -25,7 +25,7 @@ export default function MessageList({ walletAddress, onReply }: MessageListProps
   const [decryptedMessages, setDecryptedMessages] = useState<Record<string, string>>({});
   const [decrypting, setDecrypting] = useState<Record<string, boolean>>({});
 
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/messages?wallet=${walletAddress}`);
@@ -43,13 +43,13 @@ export default function MessageList({ walletAddress, onReply }: MessageListProps
     } finally {
       setLoading(false);
     }
-  };
+  }, [walletAddress]);
 
   useEffect(() => {
     if (walletAddress) {
       fetchMessages();
     }
-  }, [walletAddress]);
+  }, [walletAddress, fetchMessages]);
 
   const handleDecryptMessage = async (messageId: string, ciphertext: string, nonce: string, ephPub: string, fromWallet: string) => {
     if (decryptedMessages[messageId]) return;

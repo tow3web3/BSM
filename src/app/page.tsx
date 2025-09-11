@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import WalletButton from '@/components/WalletButton';
 import MessageList from '@/components/MessageList';
 import SendMessage from '@/components/SendMessage';
@@ -8,7 +8,7 @@ import SendMessage from '@/components/SendMessage';
 export default function Home() {
   const [authenticatedWallet, setAuthenticatedWallet] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'inbox' | 'compose' | 'sent'>('inbox');
-  const [sentMessages, setSentMessages] = useState<any[]>([]);
+  const [sentMessages, setSentMessages] = useState<Array<{toWallet: string; createdAt: string}>>([]);
   const [replyToAddress, setReplyToAddress] = useState<string>('');
   const [showPlaneAnimation, setShowPlaneAnimation] = useState(false);
 
@@ -39,7 +39,7 @@ export default function Home() {
     }
   };
 
-  const fetchSentMessages = async () => {
+  const fetchSentMessages = useCallback(async () => {
     if (!authenticatedWallet) return;
     
     try {
@@ -56,7 +56,7 @@ export default function Home() {
     } catch (error) {
       console.error('Erreur lors de la récupération des messages envoyés:', error);
     }
-  };
+  }, [authenticatedWallet]);
 
   const handleMessageSent = () => {
     setActiveTab('sent');
@@ -73,7 +73,7 @@ export default function Home() {
     if (activeTab === 'sent' && authenticatedWallet) {
       fetchSentMessages();
     }
-  }, [activeTab, authenticatedWallet]);
+  }, [activeTab, authenticatedWallet, fetchSentMessages]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 relative overflow-hidden">
@@ -434,7 +434,7 @@ export default function Home() {
                           </svg>
                         </div>
                         <h3 className="text-lg font-medium text-white mb-2">No sent messages</h3>
-                        <p className="text-gray-400 mb-6">You haven't sent any messages yet.</p>
+                        <p className="text-gray-400 mb-6">You haven&apos;t sent any messages yet.</p>
                         <button
                           onClick={() => setActiveTab('compose')}
                           className="bg-gray-800 border border-gray-700 text-white px-6 py-3 font-medium hover:bg-gray-700 transition-colors"
