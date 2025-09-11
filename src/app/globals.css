@@ -229,3 +229,61 @@ body {
   border: 1px solid rgba(34, 197, 94, 0.3);
   backdrop-filter: blur(10px);
 }
+
+/* Paper Plane Animation */
+@keyframes fly-plane {
+  0% {
+    transform: translate(-100px, -50px) rotate(-45deg) scale(0.5);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(-50px, -25px) rotate(-30deg) scale(0.8);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(0px, 0px) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(50px, -25px) rotate(30deg) scale(0.8);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(100px, -50px) rotate(45deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+.animate-fly-plane {
+  animation: fly-plane 3s ease-in-out infinite;
+}
+
+/* Typewriter Animation */
+@keyframes typewriter {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typewriter 2s steps(50) 1s both;
+}
+
+/* Blinking Cursor */
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 1s infinite;
+}

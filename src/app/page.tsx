@@ -10,6 +10,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'inbox' | 'compose' | 'sent'>('inbox');
   const [sentMessages, setSentMessages] = useState<any[]>([]);
   const [replyToAddress, setReplyToAddress] = useState<string>('');
+  const [showPlaneAnimation, setShowPlaneAnimation] = useState(false);
 
   const handleAuthSuccess = async (publicKey: string) => {
     setAuthenticatedWallet(publicKey);
@@ -104,20 +105,21 @@ export default function Home() {
               </div>
             </div>
             
-            {/* Search Bar */}
+            {/* Paper Plane Animation */}
             <div className="hidden md:flex items-center">
-              <div className="bg-gray-800 border border-gray-700 px-4 py-2 w-96">
+              <button
+                onClick={() => setShowPlaneAnimation(!showPlaneAnimation)}
+                className="relative group bg-gray-800 border border-gray-700 px-4 py-2 hover:border-gray-600 transition-colors"
+              >
                 <div className="flex items-center">
-                  <svg className="w-4 h-4 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                  <input 
-                    type="text" 
-                    placeholder="Search messages..." 
-                    className="bg-transparent text-sm text-white placeholder-gray-400 focus:outline-none flex-1"
-                  />
+                  <div className="w-6 h-6 text-gray-400 mr-3 group-hover:text-cyan-400 transition-colors">
+                    <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                  </div>
+                  <span className="text-sm text-gray-400 group-hover:text-white transition-colors">Contract Address</span>
                 </div>
-              </div>
+              </button>
             </div>
           </div>
 
@@ -492,6 +494,63 @@ export default function Home() {
           )}
         </div>
       </div>
+
+      {/* Paper Plane Animation */}
+      {showPlaneAnimation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          <div className="relative">
+            {/* Flying Paper Plane */}
+            <div className="absolute -top-20 -left-20 animate-fly-plane">
+              <div className="w-8 h-8 text-cyan-400 transform rotate-45">
+                <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+              </div>
+            </div>
+
+            {/* Contract Address Display */}
+            <div className="bg-gray-900 border border-cyan-400/50 rounded-2xl p-8 max-w-2xl mx-auto backdrop-blur-xl">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-white mb-6">Contract Address</h3>
+                
+                {/* Animated Text */}
+                <div className="relative">
+                  <div className="text-lg font-mono text-cyan-400 tracking-wider animate-typewriter">
+                    CA: 8BVgid3GzQGgyoeTs8QZmwMWGbdqfm9EAVRQFueSpump
+                  </div>
+                  
+                  {/* Cursor Animation */}
+                  <div className="inline-block w-2 h-6 bg-cyan-400 ml-1 animate-blink"></div>
+                </div>
+
+                {/* Copy Button */}
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText('8BVgid3GzQGgyoeTs8QZmwMWGbdqfm9EAVRQFueSpump');
+                    // You could add a toast notification here
+                  }}
+                  className="mt-6 bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center mx-auto"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Copy Address
+                </button>
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setShowPlaneAnimation(false)}
+                  className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
