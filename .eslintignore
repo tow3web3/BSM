@@ -1,0 +1,11 @@
+# Generated files
+src/generated/
+.next/
+out/
+build/
+
+# Dependencies
+node_modules/
+
+# Environment files
+.env*
