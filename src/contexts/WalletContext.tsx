@@ -87,8 +87,8 @@ export function SolanaWalletProvider({ children }: WalletProviderProps) {
       } else if (Array.isArray(signature)) {
         signatureBytes = new Uint8Array(signature);
       } else {
-        // Si c'est un objet avec une propriété signature
-        signatureBytes = new Uint8Array(signature.signature || signature);
+        // Fallback: essayer de convertir en Uint8Array
+        throw new Error('Format de signature non supporté');
       }
       
       // Générer la clé de chiffrement à partir de la signature
