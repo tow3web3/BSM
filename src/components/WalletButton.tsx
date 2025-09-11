@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useWallet } from '@/contexts/WalletContext';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { generateAuthMessage } from '@/lib/solana-auth';
 
 interface WalletButtonProps {
@@ -10,20 +11,11 @@ interface WalletButtonProps {
 
 export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
   const { publicKey, connected, connecting, disconnect, signMessage } = useWallet();
+  const { setVisible } = useWalletModal();
   const [authenticating, setAuthenticating] = useState(false);
 
-  const handleConnect = async () => {
-    if (typeof window !== 'undefined' && window.solana?.isPhantom) {
-      try {
-        const response = await window.solana.connect();
-        // La connexion sera gérée par le contexte
-      } catch (error) {
-        console.error('Erreur de connexion:', error);
-        alert('Error connecting to wallet');
-      }
-    } else {
-      alert('Phantom Wallet not found. Please install it from https://phantom.app/');
-    }
+  const handleConnect = () => {
+    setVisible(true);
   };
 
   const handleAuthenticate = async () => {
@@ -107,7 +99,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
                   <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"/>
                 </svg>
               </div>
-              <span>CONNECT PHANTOM</span>
+              <span>CONNECT WALLET</span>
             </>
           )}
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-400 to-cyan-300 rounded-b-2xl transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>

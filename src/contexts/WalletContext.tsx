@@ -1,10 +1,19 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useWallet as useWalletAdapter } from '@solana/wallet-adapter-react';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+  BackpackWalletAdapter,
+  GlowWalletAdapter,
+  TrustWalletAdapter,
+  CoinbaseWalletAdapter,
+  SlopeWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 import { PublicKey } from '@solana/web3.js';
 import { generateEncryptionKey } from '@/lib/solana-auth';
@@ -37,78 +46,41 @@ interface WalletProviderProps {
 }
 
 export function SolanaWalletProvider({ children }: WalletProviderProps) {
-  const [publicKey, setPublicKey] = useState<PublicKey | null>(null);
-  const [connected, setConnected] = useState(false);
-  const [connecting, setConnecting] = useState(false);
-  const [wallet, setWallet] = useState<any>(null);
+  const { publicKey, connected, connecting, disconnect: disconnectAdapter, signMessage: signMessageAdapter } = useWalletAdapter();
   const [encryptionKey, setEncryptionKey] = useState<Uint8Array | null>(null);
 
   const network = WalletAdapterNetwork.Devnet;
   const endpoint = clusterApiUrl(network);
 
-  const wallets = [new PhantomWalletAdapter()];
+  const wallets = [
+    new PhantomWalletAdapter(),
+    new SolflareWalletAdapter(),
+    new BackpackWalletAdapter(),
+    new GlowWalletAdapter(),
+    new TrustWalletAdapter(),
+    new CoinbaseWalletAdapter(),
+    new SlopeWalletAdapter(),
+  ];
 
   useEffect(() => {
-    // Vérifier si Phantom est disponible
-    if (typeof window !== 'undefined' && window.solana?.isPhantom) {
-      setWallet(window.solana);
-      
-      // Écouter les changements de connexion
-      window.solana.on('connect', () => {
-        setPublicKey(new PublicKey(window.solana.publicKey));
-        setConnected(true);
-      });
-
-      window.solana.on('disconnect', () => {
-        setPublicKey(null);
-        setConnected(false);
-        setEncryptionKey(null);
-      });
-
-      // Vérifier si déjà connecté
-      if (window.solana.isConnected) {
-        setPublicKey(new PublicKey(window.solana.publicKey));
-        setConnected(true);
-      }
+    if (!connected) {
+      setEncryptionKey(null);
     }
-  }, []);
-
-  const connect = async () => {
-    if (!wallet) {
-      alert('Phantom Wallet non trouvé. Veuillez l\'installer.');
-      return;
-    }
-
-    setConnecting(true);
-    try {
-      const response = await wallet.connect();
-      setPublicKey(new PublicKey(response.publicKey));
-      setConnected(true);
-    } catch (error) {
-      console.error('Erreur de connexion:', error);
-      alert('Erreur lors de la connexion au wallet');
-    } finally {
-      setConnecting(false);
-    }
-  };
+  }, [connected]);
 
   const disconnect = async () => {
-    if (wallet) {
-      await wallet.disconnect();
-    }
-    setPublicKey(null);
-    setConnected(false);
+    await disconnectAdapter();
     setEncryptionKey(null);
   };
 
   const signMessage = async (message: string): Promise<Uint8Array | null> => {
-    if (!wallet || !connected) {
+    if (!publicKey || !connected) {
       throw new Error('Wallet non connecté');
     }
 
     try {
       const encodedMessage = new TextEncoder().encode(message);
-      const signature = await wallet.signMessage(encodedMessage);
+      const signature = await signMessageAdapter(encodedMessage);
       
       // Convertir la signature en Uint8Array si nécessaire
       let signatureBytes: Uint8Array;
