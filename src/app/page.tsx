@@ -89,11 +89,11 @@ export default function Home() {
           <div className="flex items-center space-x-6">
             {/* Futuristic Logo with Holographic Effect */}
             <div className="flex items-center group">
-              <div className="w-10 h-10 bg-gray-800 border border-gray-700 flex items-center justify-center">
+              <div className="w-10 h-10 flex items-center justify-center">
                 <img 
                   src="https://i.imgur.com/CT3BB9h.png" 
                   alt="SolanaMail Logo" 
-                  className="w-6 h-6 object-contain"
+                  className="w-8 h-8 object-contain"
                 />
               </div>
               <div className="ml-4">
@@ -136,11 +136,11 @@ export default function Home() {
             {!authenticatedWallet ? (
               <div className="text-center py-16">
                 <div className="mb-8">
-                  <div className="w-16 h-16 bg-gray-800 border border-gray-700 flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 flex items-center justify-center mx-auto">
                     <img 
                       src="https://i.imgur.com/CT3BB9h.png" 
                       alt="SolanaMail Logo" 
-                      className="w-10 h-10 object-contain"
+                      className="w-14 h-14 object-contain"
                     />
                   </div>
                 </div>
@@ -260,11 +260,11 @@ export default function Home() {
                 {/* Hero Section */}
                 <div className="mb-16">
                   <div className="relative mb-8">
-                    <div className="w-32 h-32 bg-gray-800 border border-gray-700 flex items-center justify-center mx-auto">
+                    <div className="w-32 h-32 flex items-center justify-center mx-auto">
                       <img 
                         src="https://i.imgur.com/CT3BB9h.png" 
                         alt="SolanaMail Logo" 
-                        className="w-20 h-20 object-contain"
+                        className="w-24 h-24 object-contain"
                       />
                     </div>
                   </div>

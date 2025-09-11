@@ -19,7 +19,7 @@ interface WalletContextType {
   connecting: boolean;
   disconnect: () => Promise<void>;
   signMessage: (message: string) => Promise<Uint8Array | null>;
-  decryptMessage: (ciphertext: string, nonce: string, ephPub: string) => string | null;
+  decryptMessage: (ciphertext: string, nonce: string, ephPub: string, fromWallet?: string) => string | null;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
