@@ -123,9 +123,9 @@ export default function Home() {
               
               {/* Follow Us Button */}
               <a
-                href="https://x.com/SolanaMail_web3"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="https://x.com/SolanaMailweb3"
+            target="_blank"
+            rel="noopener noreferrer"
                 className="relative group bg-gray-800 border border-gray-700 px-4 py-2 hover:border-gray-600 transition-colors"
               >
                 <div className="flex items-center">
