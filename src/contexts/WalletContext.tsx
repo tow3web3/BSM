@@ -72,7 +72,7 @@ export function SolanaWalletProvider({ children }: WalletProviderProps) {
   };
 
   const signMessage = async (message: string): Promise<Uint8Array | null> => {
-    if (!publicKey || !connected) {
+    if (!publicKey || !connected || !signMessageAdapter) {
       throw new Error('Wallet non connecté');
     }
 
