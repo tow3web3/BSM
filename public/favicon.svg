@@ -2,8 +2,9 @@
   <!-- Background circle with gradient -->
   <circle cx="16" cy="16" r="16" fill="url(#gradient1)"/>
   
-  <!-- Main icon - simplified paper plane -->
-  <path d="M8 14L24 10L16 18L14 24L8 14Z" fill="white" opacity="0.9"/>
+  <!-- Main icon - simplified envelope/mail -->
+  <path d="M8 12L16 8L24 12V22H8V12Z" fill="white" opacity="0.9"/>
+  <path d="M8 12L16 16L24 12" stroke="white" stroke-width="1" opacity="0.7" fill="none"/>
   
   <!-- Decorative elements -->
   <circle cx="16" cy="16" r="14" stroke="white" stroke-width="1" opacity="0.3" fill="none"/>
