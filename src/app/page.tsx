@@ -4,15 +4,17 @@ import React, { useState, useEffect, useCallback } from 'react';
 import WalletButton from '@/components/WalletButton';
 import MessageList from '@/components/MessageList';
 import SendMessage from '@/components/SendMessage';
+import ContactBook from '@/components/ContactBook';
 
 export default function Home() {
   const [authenticatedWallet, setAuthenticatedWallet] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'inbox' | 'compose' | 'sent'>('inbox');
+  const [activeTab, setActiveTab] = useState<'inbox' | 'compose' | 'sent' | 'contacts'>('inbox');
   const [sentMessages, setSentMessages] = useState<Array<{toWallet: string; createdAt: string}>>([]);
   const [replyToAddress, setReplyToAddress] = useState<string>('');
   const [showPlaneAnimation, setShowPlaneAnimation] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedContactAddress, setSelectedContactAddress] = useState<string>('');
 
   // Ensure we're on client side before accessing localStorage
   useEffect(() => {
@@ -118,10 +120,16 @@ export default function Home() {
     setActiveTab('sent');
     fetchSentMessages();
     setReplyToAddress(''); // Reset reply address
+    setSelectedContactAddress(''); // Reset selected contact
   };
 
   const handleReply = (fromWallet: string) => {
     setReplyToAddress(fromWallet);
+    setActiveTab('compose');
+  };
+
+  const handleSelectContact = (address: string) => {
+    setSelectedContactAddress(address);
     setActiveTab('compose');
   };
 
@@ -333,6 +341,29 @@ export default function Home() {
                       </svg>
                     </div>
                     <span>Sent</span>
+                  </div>
+                </button>
+
+                {/* Contacts Button */}
+                <button
+                  onClick={() => setActiveTab('contacts')}
+                  className={`w-full flex items-center px-4 py-3 text-sm font-medium transition-colors ${
+                    activeTab === 'contacts'
+                      ? 'bg-gray-700 text-white border border-gray-600'
+                      : 'text-gray-300 hover:bg-gray-800 hover:text-white border border-transparent'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-6 h-6 flex items-center justify-center ${
+                      activeTab === 'contacts' 
+                        ? 'bg-gray-600' 
+                        : 'bg-gray-700'
+                    }`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </div>
+                    <span>Contacts</span>
                   </div>
                 </button>
 
@@ -812,6 +843,31 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* Contacts Panel */}
+              <div className={`${activeTab === 'contacts' ? 'w-full' : 'hidden'} bg-black/5 backdrop-blur-sm`}>
+                <div className="h-full flex flex-col">
+                  {/* Contacts Header */}
+                  <div className="border-b border-purple-500/20 p-6 bg-black/10 backdrop-blur-lg">
+                    <div className="flex items-center justify-between">
+                      <h1 className="text-2xl font-bold text-white">Contacts</h1>
+                      <button
+                        onClick={() => setActiveTab('inbox')}
+                        className="text-gray-400 hover:text-white transition-colors"
+                      >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Contacts Content */}
+                  <div className="flex-1 overflow-y-auto">
+                    <ContactBook onSelectContact={handleSelectContact} />
+                  </div>
+                </div>
+              </div>
+
               {/* Compose Panel */}
               <div className={`${activeTab === 'compose' ? 'w-full' : 'hidden'} bg-black/5 backdrop-blur-sm`}>
                 <div className="h-full flex flex-col">
@@ -832,7 +888,10 @@ export default function Home() {
                   
                   {/* Compose Form */}
                   <div className="flex-1 overflow-y-auto">
-                    <SendMessage onMessageSent={handleMessageSent} recipientAddress={replyToAddress} />
+                    <SendMessage 
+                      onMessageSent={handleMessageSent} 
+                      recipientAddress={replyToAddress || selectedContactAddress} 
+                    />
                   </div>
                 </div>
               </div>
