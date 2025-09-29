@@ -26,16 +26,6 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
   const [newContact, setNewContact] = useState({ name: '', address: '' });
   const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (isClient && publicKey) {
-      fetchContacts();
-    }
-  }, [isClient, publicKey, fetchContacts]);
-
   const fetchContacts = useCallback(async () => {
     if (!publicKey) return;
     
@@ -56,6 +46,16 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
       setLoading(false);
     }
   }, [publicKey]);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient && publicKey) {
+      fetchContacts();
+    }
+  }, [isClient, publicKey, fetchContacts]);
 
   const validateWalletAddress = (address: string): boolean => {
     try {
