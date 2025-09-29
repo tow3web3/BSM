@@ -236,26 +236,6 @@ export default function Home() {
               </div>
             </button>
             
-            {/* Puzzle Icon for Sneak Peek */}
-            <div className="flex items-center">
-              <button
-                onClick={() => {
-                  const sneakPeekSection = document.getElementById('sneak-peek');
-                  if (sneakPeekSection) {
-                    sneakPeekSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-                className="relative group bg-gray-800 border border-gray-700 p-3 hover:border-purple-500/50 transition-all duration-200 hover:bg-purple-500/5"
-                title="View Browser Extension Sneak Peek"
-              >
-                <div className="w-6 h-6 text-gray-400 group-hover:text-purple-400 transition-colors">
-                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 011-1h1a2 2 0 100-4H7a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
-                  </svg>
-                </div>
-              </button>
-            </div>
-            
             {/* Paper Plane Animation */}
             <div className="hidden md:flex items-center space-x-4">
               <button
@@ -288,6 +268,24 @@ export default function Home() {
                   <span className="text-sm text-gray-400 group-hover:text-white transition-colors">Follow Us</span>
                 </div>
               </a>
+              
+              {/* Puzzle Icon for Sneak Peek */}
+              <button
+                onClick={() => {
+                  const sneakPeekSection = document.getElementById('sneak-peek');
+                  if (sneakPeekSection) {
+                    sneakPeekSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="relative group p-2 rounded-lg hover:bg-purple-500/10 transition-all duration-300 hover:scale-110"
+                title="View Browser Extension Sneak Peek"
+              >
+                <div className="w-7 h-7 text-gray-400 group-hover:text-purple-400 transition-all duration-300 group-hover:drop-shadow-lg">
+                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 011-1h1a2 2 0 100-4H7a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                  </svg>
+                </div>
+              </button>
             </div>
           </div>
 
@@ -504,7 +502,7 @@ export default function Home() {
                           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                           </svg>
-                          <span>Connect Wallet to Message</span>
+                          <span>Connect Wallet & Start Messaging</span>
                         </div>
                       </button>
                     )}
