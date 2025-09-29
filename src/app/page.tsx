@@ -133,6 +133,15 @@ export default function Home() {
     setActiveTab('compose');
   };
 
+  const handleLogoClick = () => {
+    // Reset to home state - show the landing page instead of the app
+    setActiveTab('inbox');
+    setReplyToAddress('');
+    setSelectedContactAddress('');
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   useEffect(() => {
     if (activeTab === 'sent' && authenticatedWallet) {
       fetchSentMessages();
@@ -184,21 +193,24 @@ export default function Home() {
         <div className="relative flex justify-between items-center py-6 px-8">
           <div className="flex items-center space-x-6">
             {/* Futuristic Logo with Holographic Effect */}
-            <div className="flex items-center group">
+            <button 
+              onClick={handleLogoClick}
+              className="flex items-center group hover:opacity-80 transition-opacity duration-200 cursor-pointer"
+            >
               <div className="w-16 h-16 flex items-center justify-center">
                 <img 
                   src="/ChatGPT_Image_11_sept._2025_16_17_59.png" 
                   alt="SolanaMail Logo" 
-                  className="w-14 h-14 object-contain"
+                  className="w-14 h-14 object-contain group-hover:scale-105 transition-transform duration-200"
                 />
               </div>
               <div className="ml-4">
-                <h1 className="text-2xl font-semibold text-white tracking-tight">
+                <h1 className="text-2xl font-semibold text-white tracking-tight group-hover:text-cyan-300 transition-colors duration-200">
                   SolanaMail
                 </h1>
-                <div className="text-xs text-gray-400 font-mono">SECURE MESSAGING</div>
+                <div className="text-xs text-gray-400 font-mono group-hover:text-cyan-400 transition-colors duration-200">SECURE MESSAGING</div>
               </div>
-            </div>
+            </button>
             
             {/* Paper Plane Animation */}
             <div className="hidden md:flex items-center space-x-4">
@@ -236,7 +248,9 @@ export default function Home() {
           </div>
 
           {/* Wallet Button */}
-          <WalletButton onAuthSuccess={handleAuthSuccess} />
+          <div data-wallet-button>
+            <WalletButton onAuthSuccess={handleAuthSuccess} />
+          </div>
         </div>
       </header>
 
@@ -413,9 +427,44 @@ export default function Home() {
                   <p className="text-2xl text-gray-300 mb-4 font-light animate-fade-in-up animation-delay-400">
                     Secure Blockchain Messaging
                   </p>
-                  <p className="text-lg text-gray-400 mb-16 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-600">
+                  <p className="text-lg text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-600">
                     Send encrypted messages using your Solana wallet address. Your wallet is your identity - no registration required.
                   </p>
+                  
+                  {/* Message Button */}
+                  <div className="animate-fade-in-up animation-delay-800">
+                    {authenticatedWallet ? (
+                      <button
+                        onClick={() => setActiveTab('compose')}
+                        className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                          </svg>
+                          <span>Start Messaging</span>
+                        </div>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          // Scroll to wallet button or trigger wallet connection
+                          const walletButton = document.querySelector('[data-wallet-button]');
+                          if (walletButton) {
+                            walletButton.scrollIntoView({ behavior: 'smooth' });
+                          }
+                        }}
+                        className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                          </svg>
+                          <span>Connect Wallet to Message</span>
+                        </div>
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Features - Alternating Layout */}
