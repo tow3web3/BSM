@@ -5,6 +5,7 @@ import WalletButton from '@/components/WalletButton';
 import MessageList from '@/components/MessageList';
 import SendMessage from '@/components/SendMessage';
 import ContactBook from '@/components/ContactBook';
+import EmailSignup from '@/components/EmailSignup';
 
 export default function Home() {
   const [authenticatedWallet, setAuthenticatedWallet] = useState<string | null>(null);
@@ -487,6 +488,11 @@ export default function Home() {
                         </div>
                       </button>
                     )}
+                  </div>
+                  
+                  {/* Email Signup */}
+                  <div className="animate-fade-in-up animation-delay-1000 mt-12">
+                    <EmailSignup variant="hero" />
                   </div>
                 </div>
 

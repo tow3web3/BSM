@@ -20,6 +20,14 @@ const interBold = Inter({
 export const metadata: Metadata = {
   title: "SolanaMail - Wallet Messaging",
   description: "Send and receive end-to-end encrypted messages with your Solana wallet",
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.png', type: 'image/png' }
+    ],
+    apple: '/favicon.png',
+  },
 };
 
 export default function RootLayout({
