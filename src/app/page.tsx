@@ -637,7 +637,7 @@ export default function Home() {
                       <div className="flex-1 scroll-reveal-left reveal-delay-200">
                         <div className="mr-16">
                           <div className="card-modern p-8 border-r-4 border-cyan-500/50">
-                            <div className="text-cyan-300 text-sm mb-2">💰 Get $WA Tokens</div>
+                            <div className="text-cyan-300 text-sm mb-2">💰 Get $SM Tokens</div>
                             <div className="text-cyan-300 text-sm mb-2">📈 DEX Integration</div>
                             <div className="text-cyan-300 text-sm">🎯 Premium Features</div>
                           </div>
@@ -651,9 +651,9 @@ export default function Home() {
                               2
                             </div>
                           </div>
-                          <h3 className="text-2xl font-bold text-white mb-4">Purchase $WA Token</h3>
+                          <h3 className="text-2xl font-bold text-white mb-4">Purchase $SM Token</h3>
                           <p className="text-lg text-gray-400 mb-6">
-                            Get $WA tokens to unlock premium features and enhanced messaging capabilities.
+                            Get $SM tokens to unlock premium features and enhanced messaging capabilities.
                           </p>
                           <div className="flex items-center justify-end gap-3 text-cyan-400">
                             <span className="text-sm">Available on DEX</span>
