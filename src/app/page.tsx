@@ -16,6 +16,7 @@ export default function Home() {
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedContactAddress, setSelectedContactAddress] = useState<string>('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Ensure we're on client side before accessing localStorage
   useEffect(() => {
@@ -132,6 +133,7 @@ export default function Home() {
   const handleSelectContact = (address: string) => {
     setSelectedContactAddress(address);
     setActiveTab('compose');
+    setSidebarOpen(false); // Close sidebar on mobile
   };
 
   const handleDeleteSentMessage = async (messageId: string) => {
@@ -162,8 +164,14 @@ export default function Home() {
     setActiveTab('inbox');
     setReplyToAddress('');
     setSelectedContactAddress('');
+    setSidebarOpen(false); // Close sidebar on mobile
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleTabChange = (tab: 'inbox' | 'compose' | 'sent' | 'contacts') => {
+    setActiveTab(tab);
+    setSidebarOpen(false); // Close sidebar on mobile
   };
 
   useEffect(() => {
@@ -298,11 +306,41 @@ export default function Home() {
 
       {/* Futuristic Layout */}
       <div className="flex relative">
+        {/* Mobile Menu Button */}
+        {authenticatedWallet && (
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="fixed top-4 left-4 z-50 md:hidden bg-gray-800 border border-gray-700 p-2 rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        )}
+
+        {/* Mobile Overlay */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         {/* Modern Sidebar */}
-        <div className="w-80 relative glass-modern border-r border-white/5 min-h-screen animate-slide-in-left">
+        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 fixed md:relative top-0 left-0 z-50 w-80 h-full md:h-auto relative glass-modern border-r border-white/5 min-h-screen animate-slide-in-left transition-transform duration-300 ease-in-out`}>
           <div className="absolute inset-0 bg-gradient-to-b from-purple-500/2 via-transparent to-cyan-400/2"></div>
           <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500/50 via-cyan-400/50 to-purple-500/50 animate-gradient-move"></div>
           <div className="relative p-8">
+            {/* Mobile Close Button */}
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="md:hidden absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
             {!authenticatedWallet ? (
               <div className="text-center py-16">
                 <div className="mb-8">
@@ -343,7 +381,7 @@ export default function Home() {
               <div className="space-y-4">
                 {/* Compose Button */}
                 <button
-                  onClick={() => setActiveTab('compose')}
+                  onClick={() => handleTabChange('compose')}
                   className="w-full bg-gray-800 border border-gray-700 text-white px-6 py-3 font-medium hover:bg-gray-700 transition-colors flex items-center justify-center mb-6"
                 >
                   <div className="flex items-center space-x-3">
@@ -356,7 +394,7 @@ export default function Home() {
 
                 {/* Inbox Button */}
                 <button
-                  onClick={() => setActiveTab('inbox')}
+                  onClick={() => handleTabChange('inbox')}
                   className={`w-full flex items-center px-4 py-3 text-sm font-medium transition-colors ${
                     activeTab === 'inbox'
                       ? 'bg-gray-700 text-white border border-gray-600'
@@ -379,7 +417,7 @@ export default function Home() {
 
                 {/* Sent Button */}
                 <button
-                  onClick={() => setActiveTab('sent')}
+                  onClick={() => handleTabChange('sent')}
                   className={`w-full flex items-center px-4 py-3 text-sm font-medium transition-colors ${
                     activeTab === 'sent'
                       ? 'bg-gray-700 text-white border border-gray-600'
@@ -402,7 +440,7 @@ export default function Home() {
 
                 {/* Contacts Button */}
                 <button
-                  onClick={() => setActiveTab('contacts')}
+                  onClick={() => handleTabChange('contacts')}
                   className={`w-full flex items-center px-4 py-3 text-sm font-medium transition-colors ${
                     activeTab === 'contacts'
                       ? 'bg-gray-700 text-white border border-gray-600'
@@ -446,7 +484,28 @@ export default function Home() {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 glass-modern backdrop-blur-sm">
+        <div className="flex-1 glass-modern backdrop-blur-sm md:ml-0 ml-0">
+          {/* Mobile Header */}
+          {authenticatedWallet && (
+            <div className="md:hidden bg-black/20 backdrop-blur-sm border-b border-gray-700 p-4">
+              <div className="flex items-center justify-between">
+                <h1 className="text-lg font-semibold text-white capitalize">
+                  {activeTab === 'inbox' ? 'Inbox' : 
+                   activeTab === 'compose' ? 'Compose' :
+                   activeTab === 'sent' ? 'Sent Messages' :
+                   activeTab === 'contacts' ? 'Contacts' : activeTab}
+                </h1>
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
           {!authenticatedWallet ? (
             <div className="flex items-center justify-center min-h-screen py-16">
               <div className="text-center max-w-5xl mx-auto px-8">
@@ -477,7 +536,7 @@ export default function Home() {
                   <div className="animate-fade-in-up animation-delay-800 opacity-0">
                     {authenticatedWallet ? (
                       <button
-                        onClick={() => setActiveTab('compose')}
+                        onClick={() => handleTabChange('compose')}
                         className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25"
                       >
                         <div className="flex items-center space-x-3">
@@ -911,7 +970,7 @@ export default function Home() {
                         <h3 className="text-lg font-medium text-white mb-2">No sent messages</h3>
                         <p className="text-gray-400 mb-6">You haven&apos;t sent any messages yet.</p>
                         <button
-                          onClick={() => setActiveTab('compose')}
+                          onClick={() => handleTabChange('compose')}
                           className="bg-gray-800 border border-gray-700 text-white px-6 py-3 font-medium hover:bg-gray-700 transition-colors"
                         >
                           Send your first message
