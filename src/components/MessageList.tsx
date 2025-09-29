@@ -15,9 +15,10 @@ interface Message {
 interface MessageListProps {
   walletAddress: string;
   onReply?: (fromWallet: string) => void;
+  onMessageDeleted?: () => void;
 }
 
-export default function MessageList({ walletAddress, onReply }: MessageListProps) {
+export default function MessageList({ walletAddress, onReply, onMessageDeleted }: MessageListProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,6 +68,41 @@ export default function MessageList({ walletAddress, onReply }: MessageListProps
       setError('Failed to decrypt message');
     } finally {
       setDecrypting(prev => ({ ...prev, [messageId]: false }));
+    }
+  };
+
+  const handleDeleteMessage = async (messageId: string) => {
+    if (!confirm('Are you sure you want to delete this message? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/messages/${messageId}?wallet=${walletAddress}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete message');
+      }
+
+      // Remove message from local state
+      setMessages(prev => prev.filter(msg => msg.id !== messageId));
+      
+      // Remove from decrypted messages if it was decrypted
+      setDecryptedMessages(prev => {
+        const newDecrypted = { ...prev };
+        delete newDecrypted[messageId];
+        return newDecrypted;
+      });
+
+      // Notify parent component
+      if (onMessageDeleted) {
+        onMessageDeleted();
+      }
+    } catch (error) {
+      console.error('Error deleting message:', error);
+      setError(error instanceof Error ? error.message : 'Failed to delete message');
     }
   };
 
@@ -225,7 +261,10 @@ export default function MessageList({ walletAddress, onReply }: MessageListProps
                     Reply
                   </button>
                 )}
-                <button className="text-gray-400 hover:text-red-400 text-xs font-medium">
+                <button 
+                  onClick={() => handleDeleteMessage(message.id)}
+                  className="text-gray-400 hover:text-red-400 text-xs font-medium transition-colors"
+                >
                   Delete
                 </button>
               </div>

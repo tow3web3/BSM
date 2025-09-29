@@ -9,7 +9,7 @@ import ContactBook from '@/components/ContactBook';
 export default function Home() {
   const [authenticatedWallet, setAuthenticatedWallet] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'inbox' | 'compose' | 'sent' | 'contacts'>('inbox');
-  const [sentMessages, setSentMessages] = useState<Array<{toWallet: string; createdAt: string}>>([]);
+  const [sentMessages, setSentMessages] = useState<Array<{id: string; toWallet: string; createdAt: string}>>([]);
   const [replyToAddress, setReplyToAddress] = useState<string>('');
   const [showPlaneAnimation, setShowPlaneAnimation] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -131,6 +131,29 @@ export default function Home() {
   const handleSelectContact = (address: string) => {
     setSelectedContactAddress(address);
     setActiveTab('compose');
+  };
+
+  const handleDeleteSentMessage = async (messageId: string) => {
+    if (!confirm('Are you sure you want to delete this sent message? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/messages/${messageId}?wallet=${authenticatedWallet}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete message');
+      }
+
+      // Remove message from local state
+      setSentMessages(prev => prev.filter(msg => msg.id !== messageId));
+    } catch (error) {
+      console.error('Error deleting sent message:', error);
+      alert(error instanceof Error ? error.message : 'Failed to delete message');
+    }
   };
 
   const handleLogoClick = () => {
@@ -827,7 +850,14 @@ export default function Home() {
                   
                   {/* Messages */}
                   <div className="flex-1 overflow-y-auto">
-                    <MessageList walletAddress={authenticatedWallet} onReply={handleReply} />
+                    <MessageList 
+                      walletAddress={authenticatedWallet} 
+                      onReply={handleReply} 
+                      onMessageDeleted={() => {
+                        // Optionally refresh messages or show a notification
+                        console.log('Message deleted');
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -871,7 +901,7 @@ export default function Home() {
                     ) : (
                       <div className="space-y-4">
                         {sentMessages.map((message, index) => (
-                          <div key={index} className="bg-gray-800 border border-gray-700 p-4 hover:border-gray-600 transition-colors">
+                          <div key={message.id} className="bg-gray-800 border border-gray-700 p-4 hover:border-gray-600 transition-colors group">
                             <div className="flex items-start justify-between mb-3">
                               <div>
                                 <div className="text-sm font-medium text-white">To: {message.toWallet.slice(0, 8)}...{message.toWallet.slice(-8)}</div>
@@ -879,6 +909,15 @@ export default function Home() {
                               </div>
                               <div className="flex items-center space-x-2">
                                 <span className="text-xs text-gray-500 bg-gray-700 px-2 py-1">Sent</span>
+                                <button
+                                  onClick={() => handleDeleteSentMessage(message.id)}
+                                  className="text-gray-400 hover:text-red-400 text-xs font-medium transition-colors opacity-0 group-hover:opacity-100"
+                                  title="Delete message"
+                                >
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                </button>
                               </div>
                             </div>
                             <div className="text-sm text-gray-300">
