@@ -92,7 +92,7 @@ export default function Home() {
             <div className="flex items-center group">
               <div className="w-10 h-10 flex items-center justify-center">
                 <img 
-                  src="https://i.imgur.com/ZrrZrs4.jpeg" 
+                  src="https://i.imgur.com/CT3BB9h.png" 
                   alt="SolanaMail Logo" 
                   className="w-8 h-8 object-contain"
                 />
@@ -157,7 +157,7 @@ export default function Home() {
                 <div className="mb-8">
                   <div className="w-16 h-16 flex items-center justify-center mx-auto">
                     <img 
-                      src="https://i.imgur.com/ZrrZrs4.jpeg" 
+                      src="https://i.imgur.com/CT3BB9h.png" 
                       alt="SolanaMail Logo" 
                       className="w-14 h-14 object-contain"
                     />
@@ -281,7 +281,7 @@ export default function Home() {
                   <div className="relative mb-8">
                     <div className="w-32 h-32 flex items-center justify-center mx-auto">
                       <img 
-                        src="https://i.imgur.com/ZrrZrs4.jpeg" 
+                        src="https://i.imgur.com/CT3BB9h.png" 
                         alt="SolanaMail Logo" 
                         className="w-24 h-24 object-contain"
                       />

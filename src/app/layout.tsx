@@ -16,39 +16,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SolanaMail - Encrypted Messaging",
   description: "Send and receive end-to-end encrypted messages with your Solana wallet",
-  keywords: ["Solana", "messaging", "encrypted", "blockchain", "wallet", "crypto"],
-  authors: [{ name: "SolanaMail Team" }],
-  creator: "SolanaMail",
-  publisher: "SolanaMail",
-  robots: "index, follow",
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://solanamail.com",
-    title: "SolanaMail - Encrypted Messaging",
-    description: "Send and receive end-to-end encrypted messages with your Solana wallet",
-    siteName: "SolanaMail",
-    images: [
-      {
-        url: "https://i.imgur.com/ZrrZrs4.jpeg",
-        width: 1200,
-        height: 630,
-        alt: "SolanaMail Logo",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "SolanaMail - Encrypted Messaging",
-    description: "Send and receive end-to-end encrypted messages with your Solana wallet",
-    images: ["https://i.imgur.com/ZrrZrs4.jpeg"],
-    creator: "@SolanaMailweb3",
-  },
-  icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
-  },
 };
 
 export default function RootLayout({
