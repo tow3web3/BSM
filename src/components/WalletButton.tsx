@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWallet } from '@/contexts/WalletContext';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { generateAuthMessage } from '@/lib/solana-auth';
@@ -13,6 +13,21 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
   const { publicKey, connected, connecting, disconnect, signMessage } = useWallet();
   const { setVisible } = useWalletModal();
   const [authenticating, setAuthenticating] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [hasSessionToken, setHasSessionToken] = useState(false);
+
+  // Ensure we're on client side before accessing localStorage
+  useEffect(() => {
+    setIsClient(true);
+    setHasSessionToken(!!localStorage.getItem('sessionToken'));
+  }, []);
+
+  // Update session token state when connected state changes
+  useEffect(() => {
+    if (isClient) {
+      setHasSessionToken(!!localStorage.getItem('sessionToken'));
+    }
+  }, [connected, isClient]);
 
   const handleConnect = () => {
     setVisible(true);
@@ -55,6 +70,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
 
         if (result.success) {
           localStorage.setItem('sessionToken', result.sessionToken);
+          setHasSessionToken(true);
           onAuthSuccess?.(publicKey.toString());
         } else {
           alert('Authentication error: ' + result.error);
@@ -70,113 +86,166 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
 
   const handleDisconnect = () => {
     localStorage.removeItem('sessionToken');
+    setHasSessionToken(false);
     disconnect();
   };
 
   if (!connected) {
     return (
-      <div className="relative group">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
-        <button
-          onClick={handleConnect}
-          disabled={connecting}
-          className="relative bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white px-8 py-4 rounded-2xl font-black text-lg tracking-wide transition-all duration-500 flex items-center space-x-4 shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-        >
-          {connecting ? (
-            <>
-              <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              </div>
-              <span>CONNECTING...</span>
-            </>
-          ) : (
-            <>
-              <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"/>
-                </svg>
-              </div>
-              <span>CONNECT WALLET</span>
-            </>
-          )}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-400 to-cyan-300 rounded-b-2xl transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
-        </button>
-      </div>
+      <button
+        onClick={handleConnect}
+        disabled={connecting}
+        className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 hover:border-white/20 backdrop-blur-sm transition-all duration-300 ease-out hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        <div className="relative flex items-center gap-3 px-6 py-3">
+          <div className="flex items-center justify-center w-5 h-5">
+            {connecting ? (
+              <svg 
+                className="animate-spin w-5 h-5 text-white/70" 
+                fill="none" 
+                viewBox="0 0 24 24"
+              >
+                <circle 
+                  className="opacity-25" 
+                  cx="12" 
+                  cy="12" 
+                  r="10" 
+                  stroke="currentColor" 
+                  strokeWidth="2"
+                />
+                <path 
+                  className="opacity-75" 
+                  fill="currentColor" 
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            ) : (
+              <svg 
+                className="w-5 h-5 text-white/70 group-hover:text-white transition-colors duration-200" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth="1.5" 
+                  d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9v3"
+                />
+              </svg>
+            )}
+          </div>
+          
+          <span className="text-sm font-medium text-white/80 group-hover:text-white transition-colors duration-200">
+            {connecting ? 'Connecting...' : 'Connect Wallet'}
+          </span>
+        </div>
+        
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+      </button>
     );
   }
 
-  if (!localStorage.getItem('sessionToken')) {
+  if (!isClient || !hasSessionToken) {
     return (
-      <div className="relative group">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
-        <button
-          onClick={handleAuthenticate}
-          disabled={authenticating}
-          className="relative bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-black text-lg tracking-wide transition-all duration-500 flex items-center space-x-4 shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-        >
-          {authenticating ? (
-            <>
-              <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              </div>
-              <span>AUTHENTICATING...</span>
-            </>
-          ) : (
-            <>
-              <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <span>SIGN IN</span>
-            </>
-          )}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-400 to-cyan-300 rounded-b-2xl transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
-        </button>
-      </div>
+      <button
+        onClick={handleAuthenticate}
+        disabled={authenticating}
+        className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-500/10 to-cyan-500/10 border border-purple-500/20 hover:border-purple-500/40 backdrop-blur-sm transition-all duration-300 ease-out hover:from-purple-500/20 hover:to-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        <div className="relative flex items-center gap-3 px-6 py-3">
+          <div className="flex items-center justify-center w-5 h-5">
+            {authenticating ? (
+              <svg 
+                className="animate-spin w-5 h-5 text-purple-400" 
+                fill="none" 
+                viewBox="0 0 24 24"
+              >
+                <circle 
+                  className="opacity-25" 
+                  cx="12" 
+                  cy="12" 
+                  r="10" 
+                  stroke="currentColor" 
+                  strokeWidth="2"
+                />
+                <path 
+                  className="opacity-75" 
+                  fill="currentColor" 
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            ) : (
+              <svg 
+                className="w-5 h-5 text-purple-400 group-hover:text-purple-300 transition-colors duration-200" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth="1.5" 
+                  d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                />
+              </svg>
+            )}
+          </div>
+          
+          <span className="text-sm font-medium text-purple-300 group-hover:text-purple-200 transition-colors duration-200">
+            {authenticating ? 'Authenticating...' : 'Sign In'}
+          </span>
+        </div>
+        
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/60 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+      </button>
     );
   }
 
   return (
-    <div className="flex items-center space-x-6">
-      {/* Futuristic Wallet Info */}
-      <div className="hidden md:flex items-center space-x-4 relative group">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-400/20 rounded-2xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <div className="relative bg-gray-900/60 backdrop-blur-xl rounded-2xl px-6 py-3 border border-purple-500/30 shadow-xl">
-          <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-cyan-400 rounded-xl flex items-center justify-center shadow-lg">
-              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"/>
-              </svg>
-            </div>
-            <div className="text-white font-mono text-sm tracking-wider">
-              {publicKey ? `${publicKey.toString().slice(0, 8)}...${publicKey.toString().slice(-8)}` : ''}
-            </div>
-          </div>
+    <div className="flex items-center gap-3">
+      {/* Wallet Info */}
+      <div className="hidden sm:flex items-center gap-3 px-4 py-2 rounded-lg bg-white/5 border border-white/10 backdrop-blur-sm">
+        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center">
+          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
         </div>
+        <span className="text-xs font-mono text-white/70 tracking-wider">
+          {publicKey ? `${publicKey.toString().slice(0, 6)}...${publicKey.toString().slice(-4)}` : ''}
+        </span>
       </div>
 
-      {/* Futuristic Disconnect Button */}
-      <div className="relative group">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-orange-400/20 rounded-2xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <button
-          onClick={handleDisconnect}
-          className="relative bg-gray-900/60 backdrop-blur-xl hover:bg-gray-800/60 text-gray-300 hover:text-white px-6 py-3 rounded-2xl font-bold transition-all duration-500 flex items-center space-x-3 border border-gray-700/50 hover:border-red-500/30 shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
-        >
-          <div className="w-5 h-5 bg-red-500/20 rounded-lg flex items-center justify-center">
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-          </div>
-          <span className="font-mono tracking-wider text-xs">DISCONNECT</span>
-        </button>
-      </div>
+      {/* Disconnect Button */}
+      <button
+        onClick={handleDisconnect}
+        className="group relative overflow-hidden rounded-lg bg-white/5 border border-white/10 hover:border-red-400/30 backdrop-blur-sm transition-all duration-300 ease-out hover:bg-red-500/10"
+      >
+        <div className="absolute inset-0 bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        <div className="relative flex items-center gap-2 px-3 py-2">
+          <svg 
+            className="w-4 h-4 text-white/60 group-hover:text-red-400 transition-colors duration-200" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth="1.5" 
+              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+            />
+          </svg>
+          <span className="hidden sm:inline text-xs font-medium text-white/60 group-hover:text-red-400 transition-colors duration-200">
+            Disconnect
+          </span>
+        </div>
+        
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-red-400/60 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+      </button>
     </div>
   );
 }

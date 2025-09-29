@@ -17,8 +17,10 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     if (initialRecipient) {
       setRecipientAddress(initialRecipient);
     }
@@ -38,6 +40,11 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
     
     if (!publicKey) {
       setError('Wallet not connected');
+      return;
+    }
+
+    if (!isClient) {
+      setError('Please wait for the application to load');
       return;
     }
 
