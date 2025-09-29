@@ -489,11 +489,6 @@ export default function Home() {
                       </button>
                     )}
                   </div>
-                  
-                  {/* Email Signup */}
-                  <div className="animate-fade-in-up animation-delay-1000 mt-12">
-                    <EmailSignup variant="hero" />
-                  </div>
                 </div>
 
                 {/* Features - Alternating Layout */}
@@ -630,6 +625,11 @@ export default function Home() {
                       </div>
                     </div>
 
+                    {/* Get Notified Button */}
+                    <div className="text-center mb-8">
+                      <EmailSignup variant="hero" />
+                    </div>
+
                     <div className="grid md:grid-cols-3 gap-6 mb-8">
                       <div className="text-center">
                         <div className="w-12 h-12 bg-purple-500/20 border border-purple-500/30 rounded-xl flex items-center justify-center mx-auto mb-4">
@@ -664,11 +664,6 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="text-center">
-                      <button className="bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                        Get Notified When Available
-                      </button>
-                    </div>
                   </div>
                 </div>
 
