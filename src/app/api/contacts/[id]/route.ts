@@ -4,11 +4,11 @@ import { prisma } from '@/lib/prisma';
 // PUT /api/contacts/[id] - Update a contact
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { name } = await request.json();
-    const contactId = params.id;
+    const { id: contactId } = await params;
 
     if (!name) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
@@ -29,10 +29,10 @@ export async function PUT(
 // DELETE /api/contacts/[id] - Delete a contact
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const contactId = params.id;
+    const { id: contactId } = await params;
 
     await prisma.contact.delete({
       where: { id: contactId }
