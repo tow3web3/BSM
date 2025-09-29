@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useWallet } from '@/contexts/WalletContext';
 
 interface Contact {
@@ -34,9 +34,9 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
     if (isClient && publicKey) {
       fetchContacts();
     }
-  }, [isClient, publicKey]);
+  }, [isClient, publicKey, fetchContacts]);
 
-  const fetchContacts = async () => {
+  const fetchContacts = useCallback(async () => {
     if (!publicKey) return;
     
     try {
@@ -55,7 +55,7 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [publicKey]);
 
   const validateWalletAddress = (address: string): boolean => {
     try {
