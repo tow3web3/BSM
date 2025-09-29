@@ -168,195 +168,206 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
 
   if (!isClient) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white"></div>
+      <div className="h-full flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
       </div>
     );
   }
 
   if (!publicKey) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+      <div className="h-full flex items-center justify-center">
         <div className="text-center">
-          <div className="text-6xl mb-4">📱</div>
-          <h2 className="text-2xl font-bold text-white mb-2">Connect Your Wallet</h2>
-          <p className="text-blue-200">Please connect your wallet to manage contacts</p>
+          <div className="w-16 h-16 bg-gray-800 border border-gray-700 flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-white mb-2">Connect Your Wallet</h3>
+          <p className="text-gray-400">Please connect your wallet to manage contacts</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8 scroll-reveal">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            📇 Contact Book
-          </h1>
-          <p className="text-blue-200 text-lg">
-            Manage your Solana contacts for easy messaging
-          </p>
-        </div>
-
-        {/* Add Contact Button */}
-        <div className="mb-6 scroll-reveal">
-          <button
-            onClick={() => setShowAddForm(!showAddForm)}
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
-          >
-            {showAddForm ? 'Cancel' : '+ Add New Contact'}
-          </button>
-        </div>
-
-        {/* Add Contact Form */}
-        {showAddForm && (
-          <div className="mb-8 scroll-reveal">
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-              <h3 className="text-xl font-bold text-white mb-4">Add New Contact</h3>
-              <form onSubmit={handleAddContact} className="space-y-4">
-                <div>
-                  <label className="block text-white/90 mb-2 font-medium">Name</label>
-                  <input
-                    type="text"
-                    value={newContact.name}
-                    onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    placeholder="Enter contact name"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-white/90 mb-2 font-medium">Solana Address</label>
-                  <input
-                    type="text"
-                    value={newContact.address}
-                    onChange={(e) => setNewContact({ ...newContact, address: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    placeholder="Enter Solana wallet address"
-                    required
-                  />
-                </div>
-                <div className="flex gap-3">
-                  <button
-                    type="submit"
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
-                  >
-                    Add Contact
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowAddForm(false)}
-                    className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
+    <div className="h-full flex flex-col">
+      {/* Add Contact Button */}
+      <div className="p-6 border-b border-purple-500/20">
+        <button
+          onClick={() => setShowAddForm(!showAddForm)}
+          className="w-full bg-gray-800 border border-gray-700 text-white px-6 py-3 font-medium hover:bg-gray-700 transition-colors flex items-center justify-center"
+        >
+          <div className="flex items-center space-x-3">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            <span>{showAddForm ? 'Cancel' : 'Add New Contact'}</span>
           </div>
-        )}
+        </button>
+      </div>
 
-        {/* Error Message */}
-        {error && (
-          <div className="mb-6 scroll-reveal">
-            <div className="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-3 rounded-xl">
-              {error}
+      {/* Add Contact Form */}
+      {showAddForm && (
+        <div className="p-6 border-b border-purple-500/20 bg-black/5">
+          <h3 className="text-lg font-medium text-white mb-4">Add New Contact</h3>
+          <form onSubmit={handleAddContact} className="space-y-4">
+            <div>
+              <label className="block text-gray-300 mb-2 text-sm font-medium">Name</label>
+              <input
+                type="text"
+                value={newContact.name}
+                onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                placeholder="Enter contact name"
+                required
+              />
             </div>
+            <div>
+              <label className="block text-gray-300 mb-2 text-sm font-medium">Solana Address</label>
+              <input
+                type="text"
+                value={newContact.address}
+                onChange={(e) => setNewContact({ ...newContact, address: e.target.value })}
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                placeholder="Enter Solana wallet address"
+                required
+              />
+            </div>
+            <div className="flex gap-3">
+              <button
+                type="submit"
+                className="bg-gray-800 border border-gray-700 text-white px-6 py-3 font-medium hover:bg-gray-700 transition-colors"
+              >
+                Add Contact
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAddForm(false)}
+                className="bg-gray-700 border border-gray-600 text-white px-6 py-3 font-medium hover:bg-gray-600 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="p-4 bg-red-500/20 border-b border-red-500/50">
+          <div className="text-red-100 text-sm">{error}</div>
+        </div>
+      )}
+
+      {/* Contacts List */}
+      <div className="flex-1 overflow-y-auto p-6">
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+            <p className="text-gray-400">Loading contacts...</p>
           </div>
-        )}
-
-        {/* Contacts List */}
-        <div className="scroll-reveal">
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-              <p className="text-white/70">Loading contacts...</p>
+        ) : contacts.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-gray-800 border border-gray-700 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
             </div>
-          ) : contacts.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📇</div>
-              <h3 className="text-2xl font-bold text-white mb-2">No Contacts Yet</h3>
-              <p className="text-blue-200">Add your first contact to get started!</p>
-            </div>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {contacts.map((contact) => (
-                <div
-                  key={contact.id}
-                  className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300"
-                >
-                  {editingContact?.id === contact.id ? (
-                    <form onSubmit={handleUpdateContact} className="space-y-4">
-                      <input
-                        type="text"
-                        value={editingContact.name}
-                        onChange={(e) => setEditingContact({ ...editingContact, name: e.target.value })}
-                        className="w-full px-3 py-2 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        required
-                      />
-                      <div className="text-xs text-white/60 font-mono break-all">
-                        {contact.address}
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          type="submit"
-                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg text-sm transition-colors"
-                        >
-                          Save
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setEditingContact(null)}
-                          className="bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-lg text-sm transition-colors"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </form>
-                  ) : (
-                    <>
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-xl font-bold text-white">{contact.name}</h3>
-                        <div className="flex gap-2">
-                          {onSelectContact && (
-                            <button
-                              onClick={() => handleSelectContact(contact.address)}
-                              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm transition-colors"
-                              title="Select for messaging"
-                            >
-                              📤
-                            </button>
-                          )}
-                          <button
-                            onClick={() => setEditingContact(contact)}
-                            className="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded-lg text-sm transition-colors"
-                            title="Edit contact"
-                          >
-                            ✏️
-                          </button>
-                          <button
-                            onClick={() => handleDeleteContact(contact.id)}
-                            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm transition-colors"
-                            title="Delete contact"
-                          >
-                            🗑️
-                          </button>
+            <h3 className="text-lg font-medium text-white mb-2">No Contacts Yet</h3>
+            <p className="text-gray-400 mb-6">Add your first contact to get started!</p>
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="bg-gray-800 border border-gray-700 text-white px-6 py-3 font-medium hover:bg-gray-700 transition-colors"
+            >
+              Add Contact
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {contacts.map((contact) => (
+              <div
+                key={contact.id}
+                className="bg-gray-800 border border-gray-700 p-4 hover:border-gray-600 transition-colors"
+              >
+                {editingContact?.id === contact.id ? (
+                  <form onSubmit={handleUpdateContact} className="space-y-4">
+                    <input
+                      type="text"
+                      value={editingContact.name}
+                      onChange={(e) => setEditingContact({ ...editingContact, name: e.target.value })}
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      required
+                    />
+                    <div className="text-xs text-gray-400 font-mono break-all">
+                      {contact.address}
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        type="submit"
+                        className="bg-gray-700 border border-gray-600 text-white px-3 py-1 text-sm font-medium hover:bg-gray-600 transition-colors"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditingContact(null)}
+                        className="bg-gray-600 border border-gray-500 text-white px-3 py-1 text-sm font-medium hover:bg-gray-500 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-medium text-white mb-1">{contact.name}</h3>
+                        <div className="text-sm text-gray-400 font-mono break-all">
+                          {contact.address}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          Added {new Date(contact.createdAt).toLocaleDateString()}
                         </div>
                       </div>
-                      <div className="text-sm text-white/80 font-mono break-all">
-                        {contact.address}
+                      <div className="flex items-center space-x-2 ml-4">
+                        {onSelectContact && (
+                          <button
+                            onClick={() => handleSelectContact(contact.address)}
+                            className="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors"
+                            title="Select for messaging"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                          </button>
+                        )}
+                        <button
+                          onClick={() => setEditingContact(contact)}
+                          className="text-yellow-400 hover:text-yellow-300 text-sm font-medium transition-colors"
+                          title="Edit contact"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteContact(contact.id)}
+                          className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
+                          title="Delete contact"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
                       </div>
-                      <div className="text-xs text-white/50 mt-2">
-                        Added {new Date(contact.createdAt).toLocaleDateString()}
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
