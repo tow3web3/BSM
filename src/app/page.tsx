@@ -212,7 +212,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:100px_100px] opacity-20"></div>
       </div>
       {/* Modern Header */}
-      <header className="relative glass-modern border-b border-white/5 shadow-2xl animate-fade-in-down">
+      <header className="relative glass-modern border-b border-white/5 shadow-2xl animate-fade-in-down opacity-0">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/3 via-transparent to-cyan-400/3"></div>
         <div className="relative flex justify-between items-center py-6 px-8">
           <div className="flex items-center space-x-6">
@@ -434,7 +434,7 @@ export default function Home() {
               <div className="text-center max-w-5xl mx-auto px-8">
                 {/* Hero Section */}
                 <div className="mb-24">
-                  <div className="relative mb-12 animate-scale-in">
+                  <div className="relative mb-12 animate-scale-in opacity-0">
                     <div className="w-40 h-40 flex items-center justify-center mx-auto relative">
                       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-full blur-2xl animate-pulse"></div>
                       <img 
@@ -445,18 +445,18 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <h1 className="text-6xl font-bold text-white mb-6 tracking-tight animate-fade-in-up animation-delay-200">
+                  <h1 className="text-6xl font-bold text-white mb-6 tracking-tight animate-fade-in-up animation-delay-200 opacity-0">
                     SolanaMail
                   </h1>
-                  <p className="text-2xl text-gray-300 mb-4 font-light animate-fade-in-up animation-delay-400">
+                  <p className="text-2xl text-gray-300 mb-4 font-light animate-fade-in-up animation-delay-400 opacity-0">
                     Secure Blockchain Messaging
                   </p>
-                  <p className="text-lg text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-600">
+                  <p className="text-lg text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-600 opacity-0">
                     Send encrypted messages using your Solana wallet address. Your wallet is your identity - no registration required.
                   </p>
                   
                   {/* Message Button */}
-                  <div className="animate-fade-in-up animation-delay-800">
+                  <div className="animate-fade-in-up animation-delay-800 opacity-0">
                     {authenticatedWallet ? (
                       <button
                         onClick={() => setActiveTab('compose')}
