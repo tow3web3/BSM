@@ -7,9 +7,11 @@ import SendMessage from '@/components/SendMessage';
 import ContactBook from '@/components/ContactBook';
 import EmailSignup from '@/components/EmailSignup';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import { useWallet } from '@/contexts/WalletContext';
 
 export default function Home() {
   const { setVisible } = useWalletModal();
+  const { connected } = useWallet();
   const [authenticatedWallet, setAuthenticatedWallet] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'inbox' | 'compose' | 'sent' | 'contacts'>('inbox');
   const [sentMessages, setSentMessages] = useState<Array<{id: string; toWallet: string; createdAt: string}>>([]);
@@ -23,6 +25,12 @@ export default function Home() {
   // Ensure we're on client side before accessing localStorage
   useEffect(() => {
     setIsClient(true);
+    // Check if user has existing session
+    const sessionToken = localStorage.getItem('sessionToken');
+    const storedWallet = localStorage.getItem('walletAddress');
+    if (sessionToken && storedWallet) {
+      setAuthenticatedWallet(storedWallet);
+    }
   }, []);
 
   // Loading screen timer
@@ -74,6 +82,8 @@ export default function Home() {
 
   const handleAuthSuccess = async (publicKey: string) => {
     setAuthenticatedWallet(publicKey);
+    // Store wallet address in localStorage for persistence
+    localStorage.setItem('walletAddress', publicKey);
     // Envoyer un message de bienvenue automatique
     await sendWelcomeMessage(publicKey);
   };
@@ -162,12 +172,15 @@ export default function Home() {
   };
 
   const handleLogoClick = () => {
-    // Reset to home state - show the landing page instead of the app
+    // Disconnect and return to homepage
+    setAuthenticatedWallet(null);
+    localStorage.removeItem('sessionToken');
+    localStorage.removeItem('walletAddress');
     setActiveTab('inbox');
     setReplyToAddress('');
     setSelectedContactAddress('');
-    setSidebarOpen(false); // Close sidebar on mobile
-    // Scroll to top
+    setSidebarOpen(false);
+    // Scroll to top to show landing page
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -181,6 +194,19 @@ export default function Home() {
       fetchSentMessages();
     }
   }, [activeTab, authenticatedWallet, fetchSentMessages]);
+
+  // Watch for wallet disconnection and return to homepage
+  useEffect(() => {
+    if (!connected && authenticatedWallet) {
+      // Wallet was disconnected, clear auth and return to homepage
+      setAuthenticatedWallet(null);
+      setActiveTab('inbox');
+      setReplyToAddress('');
+      setSelectedContactAddress('');
+      setSidebarOpen(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [connected, authenticatedWallet]);
 
   // Loading Screen
   if (isLoading) {
@@ -222,7 +248,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:100px_100px] opacity-20"></div>
       </div>
       {/* Modern Header */}
-      <header className="relative glass-modern border-b border-white/5 shadow-2xl animate-fade-in-down opacity-0 z-50">
+      <header className="fixed top-0 left-0 right-0 glass-modern border-b border-white/5 shadow-2xl animate-fade-in-down opacity-0 z-50 backdrop-blur-md">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/3 via-transparent to-cyan-400/3"></div>
         <div className="relative flex justify-between items-center py-4 md:py-6 px-4 md:px-8">
           <div className="flex items-center space-x-3 md:space-x-6">
@@ -300,15 +326,40 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Wallet Button */}
-          <div data-wallet-button>
-            <WalletButton onAuthSuccess={handleAuthSuccess} />
+          {/* Enter App Button + Wallet Button */}
+          <div className="flex items-center gap-3">
+            {/* Show Enter App button only when wallet is connected but not yet in the app */}
+            {connected && !authenticatedWallet && (
+              <button
+                onClick={() => {
+                  if (authenticatedWallet) {
+                    // User is fully authenticated, go directly to app
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setActiveTab('inbox');
+                  } else {
+                    // Wallet connected but not authenticated - scroll to show Sign In button
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-3 md:px-4 py-2 rounded-lg font-medium text-xs md:text-sm transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
+                <span className="hidden sm:inline">Enter App</span>
+                <span className="sm:hidden">Enter</span>
+              </button>
+            )}
+            
+            <div data-wallet-button>
+              <WalletButton onAuthSuccess={handleAuthSuccess} />
+            </div>
           </div>
         </div>
       </header>
 
       {/* Futuristic Layout */}
-      <div className="flex relative">
+      <div className="flex relative mt-16 md:mt-[73px]">
         {/* Sidebar Toggle Button - Always Visible */}
         <button
           onClick={() => {
@@ -351,10 +402,10 @@ export default function Home() {
         )}
 
         {/* Modern Sidebar */}
-        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed md:fixed top-[65px] md:top-[73px] left-0 z-30 w-80 h-[calc(100vh-65px)] md:h-[calc(100vh-73px)] glass-modern border-r border-white/5 transition-transform duration-300 ease-in-out overflow-visible`}>
+        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed md:fixed top-[64px] md:top-[73px] left-0 z-30 w-80 h-[calc(100vh-64px)] md:h-[calc(100vh-73px)] glass-modern border-r border-white/5 transition-transform duration-300 ease-in-out overflow-visible`}>
           <div className="absolute inset-0 bg-gradient-to-b from-purple-500/2 via-transparent to-cyan-400/2"></div>
           <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500/50 via-cyan-400/50 to-purple-500/50 animate-gradient-move"></div>
-          <div className="relative p-8">
+          <div className="relative p-8 pt-12">
 
             {!authenticatedWallet ? (
               <div className="text-center py-16">
@@ -499,7 +550,7 @@ export default function Home() {
         </div>
 
         {/* Main Content Area */}
-        <div className={`flex-1 glass-modern backdrop-blur-sm transition-all duration-300 ${sidebarOpen ? 'md:ml-80' : 'md:ml-0'} ml-0`}>
+        <div className={`flex-1 glass-modern backdrop-blur-sm transition-all duration-300 ${sidebarOpen ? 'md:ml-80' : 'md:ml-0'} ml-0 min-h-screen`}>
           {/* Mobile Header */}
           {authenticatedWallet && (
             <div className="md:hidden bg-black/20 backdrop-blur-sm border-b border-gray-700 p-4">
@@ -919,12 +970,12 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            <div className="flex h-full">
+            <div className="flex h-full pt-4">
               {/* Message List Panel */}
               <div className={`${activeTab === 'inbox' ? 'w-full' : 'hidden'} bg-black/5 backdrop-blur-sm`}>
                 <div className="h-full flex flex-col">
                   {/* Inbox Header */}
-                  <div className="border-b border-purple-500/20 p-6 bg-black/10 backdrop-blur-lg">
+                  <div className="border-b border-purple-500/20 p-6 bg-black/10 backdrop-blur-lg pt-8">
                     <div className="flex items-center justify-between">
                       <h1 className="text-2xl font-bold text-white">Inbox</h1>
                       <div className="flex items-center space-x-4">
@@ -956,7 +1007,7 @@ export default function Home() {
               <div className={`${activeTab === 'sent' ? 'w-full' : 'hidden'} bg-black/5 backdrop-blur-sm`}>
                 <div className="h-full flex flex-col">
                   {/* Sent Header */}
-                  <div className="border-b border-purple-500/20 p-6 bg-black/10 backdrop-blur-lg">
+                  <div className="border-b border-purple-500/20 p-6 bg-black/10 backdrop-blur-lg pt-8">
                     <div className="flex items-center justify-between">
                       <h1 className="text-2xl font-bold text-white">Sent Messages</h1>
                       <div className="flex items-center space-x-4">
@@ -1023,7 +1074,7 @@ export default function Home() {
 
               {/* Contacts Panel */}
               <div className={`${activeTab === 'contacts' ? 'w-full' : 'hidden'} bg-black/5 backdrop-blur-sm`}>
-                <div className="h-full flex flex-col">
+                <div className="h-full flex flex-col pt-4">
                   {/* Contacts Header */}
                   <div className="border-b border-purple-500/20 p-6 bg-black/10 backdrop-blur-lg">
                     <div className="flex items-center justify-between">
@@ -1048,7 +1099,7 @@ export default function Home() {
 
               {/* Compose Panel */}
               <div className={`${activeTab === 'compose' ? 'w-full' : 'hidden'} bg-black/5 backdrop-blur-sm`}>
-                <div className="h-full flex flex-col">
+                <div className="h-full flex flex-col pt-4">
                   {/* Compose Header */}
                   <div className="border-b border-purple-500/20 p-6 bg-black/10 backdrop-blur-lg">
                     <div className="flex items-center justify-between">

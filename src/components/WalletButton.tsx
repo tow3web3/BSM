@@ -86,6 +86,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
 
   const handleDisconnect = () => {
     localStorage.removeItem('sessionToken');
+    localStorage.removeItem('walletAddress');
     setHasSessionToken(false);
     disconnect();
   };
