@@ -306,25 +306,35 @@ export default function Home() {
 
       {/* Futuristic Layout */}
       <div className="flex relative">
-        {/* Desktop Toggle Button */}
+        {/* Sidebar Toggle Buttons */}
         {authenticatedWallet && (
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className={`hidden md:flex fixed top-[85px] z-50 bg-purple-600 border border-purple-500 p-3 hover:bg-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl items-center justify-center ${
-              sidebarOpen ? 'left-[308px] rounded-r-xl' : 'left-4 rounded-xl'
-            }`}
-            title={sidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
-          >
-            {sidebarOpen ? (
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            ) : (
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+          <>
+            {/* Open Button - Show when closed */}
+            {!sidebarOpen && (
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="hidden md:flex fixed top-[100px] left-0 z-[60] bg-gradient-to-r from-purple-600 to-purple-700 border-r-2 border-t-2 border-b-2 border-purple-400 px-2 py-6 hover:from-purple-700 hover:to-purple-800 transition-all duration-300 shadow-2xl hover:shadow-purple-500/50 items-center justify-center rounded-r-2xl"
+                title="Show Sidebar"
+              >
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
             )}
-          </button>
+            
+            {/* Close Button - Show when open */}
+            {sidebarOpen && (
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="hidden md:flex fixed bottom-6 left-[264px] z-[60] text-white bg-purple-600 hover:bg-purple-700 transition-all p-3 rounded-xl shadow-lg hover:shadow-xl border border-purple-500 items-center justify-center"
+                title="Collapse Sidebar"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            )}
+          </>
         )}
 
         {/* Mobile Menu Button */}
@@ -352,16 +362,6 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-purple-500/2 via-transparent to-cyan-400/2"></div>
           <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500/50 via-cyan-400/50 to-purple-500/50 animate-gradient-move"></div>
           <div className="relative p-8">
-            {/* Collapse Button */}
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="absolute bottom-4 right-4 text-gray-400 hover:text-white transition-colors bg-gray-800/50 hover:bg-gray-700/50 p-2 rounded-lg"
-              title="Collapse Sidebar"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
 
             {!authenticatedWallet ? (
               <div className="text-center py-16">
