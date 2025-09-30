@@ -22,12 +22,12 @@ export const metadata: Metadata = {
   description: "Send and receive end-to-end encrypted messages with your Solana wallet",
   icons: {
     icon: [
-      { url: '/ChatGPT_Image_11_sept._2025_16_17_59.png', sizes: 'any' },
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.png', type: 'image/png' },
-      { url: '/favicon.ico', sizes: 'any' }
+      { url: '/ChatGPT_Image_11_sept._2025_16_17_59.png', sizes: 'any', type: 'image/png' },
+      { url: '/ChatGPT_Image_11_sept._2025_16_17_59.png', sizes: '32x32', type: 'image/png' },
+      { url: '/ChatGPT_Image_11_sept._2025_16_17_59.png', sizes: '16x16', type: 'image/png' }
     ],
     apple: '/ChatGPT_Image_11_sept._2025_16_17_59.png',
+    shortcut: '/ChatGPT_Image_11_sept._2025_16_17_59.png',
   },
 };
 

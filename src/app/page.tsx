@@ -6,8 +6,10 @@ import MessageList from '@/components/MessageList';
 import SendMessage from '@/components/SendMessage';
 import ContactBook from '@/components/ContactBook';
 import EmailSignup from '@/components/EmailSignup';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 
 export default function Home() {
+  const { setVisible } = useWalletModal();
   const [authenticatedWallet, setAuthenticatedWallet] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'inbox' | 'compose' | 'sent' | 'contacts'>('inbox');
   const [sentMessages, setSentMessages] = useState<Array<{id: string; toWallet: string; createdAt: string}>>([]);
@@ -222,22 +224,23 @@ export default function Home() {
       {/* Modern Header */}
       <header className="relative glass-modern border-b border-white/5 shadow-2xl animate-fade-in-down opacity-0 z-50">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/3 via-transparent to-cyan-400/3"></div>
-        <div className="relative flex justify-between items-center py-6 px-8">
-          <div className="flex items-center space-x-6">
+        <div className="relative flex justify-between items-center py-4 md:py-6 px-4 md:px-8">
+          <div className="flex items-center space-x-3 md:space-x-6">
             {/* Futuristic Logo with Holographic Effect */}
             <button 
               onClick={handleLogoClick}
               className="flex items-center group hover:opacity-80 transition-opacity duration-200 cursor-pointer"
             >
-              <div className="w-16 h-16 flex items-center justify-center">
+              <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center flex-shrink-0">
                 <img 
                   src="/ChatGPT_Image_11_sept._2025_16_17_59.png" 
                   alt="SolanaMail Logo" 
-                  className="w-14 h-14 object-contain group-hover:scale-105 transition-transform duration-200"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
                 />
               </div>
-              <div className="ml-4">
-                <h1 className="text-2xl font-semibold text-white tracking-tight group-hover:text-cyan-300 transition-colors duration-200">
+              <div className="ml-2 md:ml-4 hidden md:block">
+                <h1 className="text-lg md:text-2xl font-semibold text-white tracking-tight group-hover:text-cyan-300 transition-colors duration-200">
                   SolanaMail
                 </h1>
                 <div className="text-xs text-gray-400 font-mono group-hover:text-cyan-400 transition-colors duration-200">SECURE MESSAGING</div>
@@ -306,36 +309,26 @@ export default function Home() {
 
       {/* Futuristic Layout */}
       <div className="flex relative">
-        {/* Sidebar Toggle Buttons */}
-        {authenticatedWallet && (
-          <>
-            {/* Open Button - Show when closed */}
-            {!sidebarOpen && (
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="hidden md:flex fixed top-[100px] left-0 z-[60] bg-gradient-to-r from-purple-600 to-purple-700 border-r-2 border-t-2 border-b-2 border-purple-400 px-2 py-6 hover:from-purple-700 hover:to-purple-800 transition-all duration-300 shadow-2xl hover:shadow-purple-500/50 items-center justify-center rounded-r-2xl"
-                title="Show Sidebar"
-              >
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+        {/* Sidebar Toggle Button - Always Visible */}
+        <button
+          onClick={() => {
+            console.log('Toggle button clicked! Current state:', sidebarOpen, 'Auth:', authenticatedWallet);
+            setSidebarOpen(!sidebarOpen);
+          }}
+          className={`md:flex fixed bottom-8 z-[999] bg-gradient-to-r from-purple-600 to-purple-700 border-2 border-purple-400 px-3 py-6 hover:from-purple-700 hover:to-purple-800 transition-all duration-300 shadow-2xl hover:shadow-purple-500/50 items-center justify-center cursor-pointer ${
+            sidebarOpen ? 'left-[304px] rounded-r-2xl' : 'left-0 rounded-r-2xl'
+          }`}
+          style={{ display: 'flex' }}
+          title={sidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
+        >
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {sidebarOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             )}
-            
-            {/* Close Button - Show when open */}
-            {sidebarOpen && (
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="hidden md:flex fixed bottom-6 left-[264px] z-[60] text-white bg-purple-600 hover:bg-purple-700 transition-all p-3 rounded-xl shadow-lg hover:shadow-xl border border-purple-500 items-center justify-center"
-                title="Collapse Sidebar"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            )}
-          </>
-        )}
+          </svg>
+        </button>
 
         {/* Mobile Menu Button */}
         {authenticatedWallet && (
@@ -358,7 +351,7 @@ export default function Home() {
         )}
 
         {/* Modern Sidebar */}
-        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed md:fixed top-[73px] left-0 z-30 w-80 h-[calc(100vh-73px)] glass-modern border-r border-white/5 transition-transform duration-300 ease-in-out`}>
+        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed md:fixed top-[65px] md:top-[73px] left-0 z-30 w-80 h-[calc(100vh-65px)] md:h-[calc(100vh-73px)] glass-modern border-r border-white/5 transition-transform duration-300 ease-in-out overflow-visible`}>
           <div className="absolute inset-0 bg-gradient-to-b from-purple-500/2 via-transparent to-cyan-400/2"></div>
           <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500/50 via-cyan-400/50 to-purple-500/50 animate-gradient-move"></div>
           <div className="relative p-8">
@@ -529,10 +522,10 @@ export default function Home() {
             </div>
           )}
           {!authenticatedWallet ? (
-            <div className="flex items-center justify-center min-h-screen py-16">
-              <div className="text-center max-w-5xl mx-auto px-8">
+            <div className="flex items-center justify-center min-h-screen py-8 md:py-16">
+              <div className="text-center max-w-5xl mx-auto px-4 md:px-8">
                 {/* Hero Section */}
-                <div className="mb-24">
+                <div className="mb-12 md:mb-24">
                   <div className="relative mb-12 animate-scale-in opacity-0">
                     <div className="w-40 h-40 flex items-center justify-center mx-auto relative">
                       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-full blur-2xl animate-pulse"></div>
@@ -544,13 +537,13 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <h1 className="text-6xl font-bold text-white mb-6 tracking-tight animate-fade-in-up animation-delay-200 opacity-0">
+                  <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight animate-fade-in-up animation-delay-200 opacity-0">
                     SolanaMail
                   </h1>
-                  <p className="text-2xl text-gray-300 mb-4 font-light animate-fade-in-up animation-delay-400 opacity-0">
+                  <p className="text-xl md:text-2xl text-gray-300 mb-3 md:mb-4 font-light animate-fade-in-up animation-delay-400 opacity-0">
                     Secure Blockchain Messaging
                   </p>
-                  <p className="text-lg text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-600 opacity-0">
+                  <p className="text-base md:text-lg text-gray-400 mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up animation-delay-600 opacity-0">
                     Send encrypted messages using your Solana wallet address. Your wallet is your identity - no registration required.
                   </p>
                   
@@ -571,11 +564,8 @@ export default function Home() {
                     ) : (
                       <button
                         onClick={() => {
-                          // Scroll to wallet button or trigger wallet connection
-                          const walletButton = document.querySelector('[data-wallet-button]');
-                          if (walletButton) {
-                            walletButton.scrollIntoView({ behavior: 'smooth' });
-                          }
+                          // Open wallet connection modal
+                          setVisible(true);
                         }}
                         className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25"
                       >

@@ -34,7 +34,7 @@ export default function EmailSignup({ className = '', variant = 'hero' }: EmailS
 
     // Simulate API call delay
     setTimeout(() => {
-      setMessage({ type: 'success', text: 'Email saved! You\'ll be notified about updates.' });
+      setMessage({ type: 'success', text: 'Email saved! We\'ll notify you when the extension is ready.' });
       setEmail('');
       setLoading(false);
     }, 1000);
@@ -82,10 +82,10 @@ export default function EmailSignup({ className = '', variant = 'hero' }: EmailS
   return (
     <div className={`${styles.container} ${className}`}>
       <h3 className={styles.title}>
-        📧 Stay Updated
+        Get notified when available
       </h3>
       <p className={styles.description}>
-        Get notified about new features, updates, and important announcements.
+        Be the first to know when our browser extension launches.
       </p>
       
       <form onSubmit={handleSubmit} className="space-y-4">
