@@ -16,7 +16,7 @@ export default function Home() {
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedContactAddress, setSelectedContactAddress] = useState<string>('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open on desktop
 
   // Ensure we're on client side before accessing localStorage
   useEffect(() => {
@@ -220,7 +220,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:100px_100px] opacity-20"></div>
       </div>
       {/* Modern Header */}
-      <header className="relative glass-modern border-b border-white/5 shadow-2xl animate-fade-in-down opacity-0">
+      <header className="relative glass-modern border-b border-white/5 shadow-2xl animate-fade-in-down opacity-0 z-50">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/3 via-transparent to-cyan-400/3"></div>
         <div className="relative flex justify-between items-center py-6 px-8">
           <div className="flex items-center space-x-6">
@@ -306,6 +306,27 @@ export default function Home() {
 
       {/* Futuristic Layout */}
       <div className="flex relative">
+        {/* Desktop Toggle Button */}
+        {authenticatedWallet && (
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className={`hidden md:flex fixed top-[85px] z-50 bg-purple-600 border border-purple-500 p-3 hover:bg-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl items-center justify-center ${
+              sidebarOpen ? 'left-[308px] rounded-r-xl' : 'left-4 rounded-xl'
+            }`}
+            title={sidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
+          >
+            {sidebarOpen ? (
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            )}
+          </button>
+        )}
+
         {/* Mobile Menu Button */}
         {authenticatedWallet && (
           <button
@@ -327,17 +348,18 @@ export default function Home() {
         )}
 
         {/* Modern Sidebar */}
-        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 fixed md:relative top-0 left-0 z-50 w-80 h-full md:h-auto relative glass-modern border-r border-white/5 min-h-screen animate-slide-in-left transition-transform duration-300 ease-in-out`}>
+        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed md:fixed top-[73px] left-0 z-30 w-80 h-[calc(100vh-73px)] glass-modern border-r border-white/5 transition-transform duration-300 ease-in-out`}>
           <div className="absolute inset-0 bg-gradient-to-b from-purple-500/2 via-transparent to-cyan-400/2"></div>
           <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500/50 via-cyan-400/50 to-purple-500/50 animate-gradient-move"></div>
           <div className="relative p-8">
-            {/* Mobile Close Button */}
+            {/* Collapse Button */}
             <button
               onClick={() => setSidebarOpen(false)}
-              className="md:hidden absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+              className="absolute bottom-4 right-4 text-gray-400 hover:text-white transition-colors bg-gray-800/50 hover:bg-gray-700/50 p-2 rounded-lg"
+              title="Collapse Sidebar"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
 
@@ -484,7 +506,7 @@ export default function Home() {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 glass-modern backdrop-blur-sm md:ml-0 ml-0">
+        <div className={`flex-1 glass-modern backdrop-blur-sm transition-all duration-300 ${sidebarOpen ? 'md:ml-80' : 'md:ml-0'} ml-0`}>
           {/* Mobile Header */}
           {authenticatedWallet && (
             <div className="md:hidden bg-black/20 backdrop-blur-sm border-b border-gray-700 p-4">
