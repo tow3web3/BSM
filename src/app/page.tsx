@@ -593,10 +593,14 @@ export default function Home() {
                   </p>
                   
                   {/* Message Button */}
-                  <div className="animate-fade-in-up animation-delay-800 opacity-0">
-                    {authenticatedWallet ? (
+                  {authenticatedWallet && (
+                    <div className="animate-fade-in-up animation-delay-800 opacity-0">
                       <button
-                        onClick={() => handleTabChange('compose')}
+                        onClick={() => {
+                          setShowHomepage(false);
+                          setActiveTab('inbox');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
                         className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25"
                       >
                         <div className="flex items-center space-x-3">
@@ -606,23 +610,8 @@ export default function Home() {
                           <span>Start Messaging</span>
                         </div>
                       </button>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          // Open wallet connection modal
-                          setVisible(true);
-                        }}
-                        className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25"
-                      >
-                        <div className="flex items-center space-x-3">
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                          </svg>
-                          <span>Connect Wallet & Start Messaging</span>
-                        </div>
-                      </button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Features - Alternating Layout */}
