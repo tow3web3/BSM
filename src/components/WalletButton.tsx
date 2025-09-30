@@ -96,7 +96,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
       <button
         onClick={handleConnect}
         disabled={connecting}
-        className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 hover:border-white/20 backdrop-blur-sm transition-all duration-300 ease-out hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 border-none transition-all duration-300 ease-out disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
@@ -124,7 +124,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
               </svg>
             ) : (
               <svg 
-                className="w-5 h-5 text-white/70 group-hover:text-white transition-colors duration-200" 
+                className="w-5 h-5 text-white transition-colors duration-200" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -139,12 +139,10 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
             )}
           </div>
           
-          <span className="text-sm font-medium text-white/80 group-hover:text-white transition-colors duration-200">
+          <span className="text-sm font-medium text-white transition-colors duration-200">
             {connecting ? 'Connecting...' : 'Start Messaging'}
           </span>
         </div>
-        
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
       </button>
     );
   }
