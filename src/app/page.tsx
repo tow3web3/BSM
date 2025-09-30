@@ -231,7 +231,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 relative overflow-hidden w-full">
       {/* Modern Parallax Background */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Primary floating orb */}

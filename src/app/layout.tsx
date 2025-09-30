@@ -39,8 +39,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} ${interBold.variable} antialiased bg-gray-900 text-white font-bold`}
+        className={`${inter.variable} ${interBold.variable} antialiased bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 text-white font-bold min-h-screen`}
         suppressHydrationWarning={true}
+        style={{ backgroundColor: '#0f0f23' }}
       >
         <SolanaWalletProvider>
           {children}
