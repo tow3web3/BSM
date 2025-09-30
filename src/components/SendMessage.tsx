@@ -109,11 +109,11 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
   };
 
   return (
-    <div className="p-6 h-full flex flex-col">
-      <form onSubmit={handleSubmit} className="flex flex-col h-full">
+    <div className="p-3 md:p-6 h-full flex flex-col">
+      <form onSubmit={handleSubmit} className="flex flex-col h-full max-w-4xl mx-auto w-full">
         {/* To Field */}
-        <div className="mb-6">
-          <label htmlFor="recipient" className="block text-sm font-semibold text-white mb-2">
+        <div className="mb-4 md:mb-6">
+          <label htmlFor="recipient" className="block text-xs md:text-sm font-semibold text-white mb-2">
             To
           </label>
           <div className="relative">
@@ -123,7 +123,7 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
               value={recipientAddress}
               onChange={(e) => setRecipientAddress(e.target.value)}
               placeholder="Enter recipient wallet address..."
-              className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300"
+              className="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300"
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-cyan-400 rounded-lg flex items-center justify-center">
@@ -136,8 +136,8 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
         </div>
 
         {/* Message Field */}
-        <div className="flex-1 mb-6">
-          <label htmlFor="message" className="block text-sm font-semibold text-white mb-2">
+        <div className="flex-1 mb-4 md:mb-6">
+          <label htmlFor="message" className="block text-xs md:text-sm font-semibold text-white mb-2">
             Message
           </label>
           <textarea
@@ -145,8 +145,8 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your encrypted message here..."
-            rows={12}
-            className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 resize-none"
+            rows={8}
+            className="w-full h-40 md:h-64 px-3 md:px-4 py-2 md:py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 resize-none"
           />
         </div>
 
@@ -178,7 +178,7 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
           <button
             type="submit"
             disabled={sending || !message.trim() || !recipientAddress.trim()}
-            className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white px-4 md:px-8 py-2 md:py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-300 flex items-center space-x-2 md:space-x-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
             {sending ? (
               <>

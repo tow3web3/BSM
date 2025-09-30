@@ -187,16 +187,16 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
   }
 
   return (
-    <div className="space-y-2 p-4">
+    <div className="space-y-2 p-2 md:p-4">
       {messages.map((message) => (
         <div
           key={message.id}
-          className="group bg-gray-800/30 hover:bg-gray-800/50 rounded-xl p-4 transition-all duration-300 border border-gray-700/50 hover:border-purple-500/30 cursor-pointer"
+          className="group bg-gray-800/30 hover:bg-gray-800/50 rounded-xl p-3 md:p-4 transition-all duration-300 border border-gray-700/50 hover:border-purple-500/30 cursor-pointer"
         >
-          <div className="flex items-start space-x-4">
+          <div className="flex items-start space-x-2 md:space-x-4">
             {/* Avatar */}
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-cyan-400 rounded-xl flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-sm">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-purple-500 to-cyan-400 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-bold text-xs md:text-sm">
                 {message.fromWallet.slice(0, 2).toUpperCase()}
               </span>
             </div>
@@ -222,18 +222,18 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
               {/* Message Preview */}
               <div className="mb-3">
                 {decryptedMessages[message.id] ? (
-                  <p className="text-gray-300 text-sm whitespace-pre-wrap">
+                  <p className="text-gray-300 text-xs md:text-sm whitespace-pre-wrap break-words">
                     {decryptedMessages[message.id]}
                   </p>
                 ) : (
-                  <div className="flex items-center justify-between">
-                    <p className="text-gray-400 text-sm">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <p className="text-gray-400 text-xs md:text-sm break-all">
                       {truncateMessage(message.ciphertext, 60)}
                     </p>
                     <button
                       onClick={() => handleDecryptMessage(message.id, message.ciphertext, message.nonce, message.ephPub, message.fromWallet)}
                       disabled={decrypting[message.id]}
-                      className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 whitespace-nowrap"
                     >
                       {decrypting[message.id] ? (
                         <div className="flex items-center space-x-1">
@@ -252,7 +252,7 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
               </div>
 
               {/* Message Actions */}
-              <div className="flex items-center space-x-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="flex items-center space-x-2 md:space-x-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
                 {message.fromWallet !== 'SolanaMail System' && (
                   <button 
                     onClick={() => onReply && onReply(message.fromWallet)}

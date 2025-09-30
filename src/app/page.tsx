@@ -171,12 +171,11 @@ export default function Home() {
     }
   };
 
+  const [showHomepage, setShowHomepage] = useState(false);
+
   const handleLogoClick = () => {
-    // Disconnect and return to homepage
-    setAuthenticatedWallet(null);
-    localStorage.removeItem('sessionToken');
-    localStorage.removeItem('walletAddress');
-    setActiveTab('inbox');
+    // Return to homepage but keep user logged in
+    setShowHomepage(true);
     setReplyToAddress('');
     setSelectedContactAddress('');
     setSidebarOpen(false);
@@ -328,18 +327,13 @@ export default function Home() {
 
           {/* Enter App Button + Wallet Button */}
           <div className="flex items-center gap-3">
-            {/* Show Enter App button only when wallet is connected but not yet in the app */}
-            {connected && !authenticatedWallet && (
+            {/* Show Enter App button when user is authenticated and viewing homepage */}
+            {authenticatedWallet && showHomepage && (
               <button
                 onClick={() => {
-                  if (authenticatedWallet) {
-                    // User is fully authenticated, go directly to app
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    setActiveTab('inbox');
-                  } else {
-                    // Wallet connected but not authenticated - scroll to show Sign In button
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }
+                  setShowHomepage(false);
+                  setActiveTab('inbox');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-3 md:px-4 py-2 rounded-lg font-medium text-xs md:text-sm transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
@@ -396,13 +390,13 @@ export default function Home() {
         {/* Mobile Overlay */}
         {sidebarOpen && (
           <div 
-            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            className="fixed inset-0 bg-black/50 z-[35] md:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
 
         {/* Modern Sidebar */}
-        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed md:fixed top-[64px] md:top-[73px] left-0 z-30 w-80 h-[calc(100vh-64px)] md:h-[calc(100vh-73px)] glass-modern border-r border-white/5 transition-transform duration-300 ease-in-out overflow-visible`}>
+        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed md:fixed top-[64px] md:top-[73px] left-0 z-[45] w-80 h-[calc(100vh-64px)] md:h-[calc(100vh-73px)] glass-modern border-r border-white/5 transition-transform duration-300 ease-in-out overflow-y-auto bg-gray-900/95 md:bg-transparent`}>
           <div className="absolute inset-0 bg-gradient-to-b from-purple-500/2 via-transparent to-cyan-400/2"></div>
           <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-purple-500/50 via-cyan-400/50 to-purple-500/50 animate-gradient-move"></div>
           <div className="relative p-8 pt-12">
@@ -552,10 +546,10 @@ export default function Home() {
         {/* Main Content Area */}
         <div className={`flex-1 glass-modern backdrop-blur-sm transition-all duration-300 ${sidebarOpen ? 'md:ml-80' : 'md:ml-0'} ml-0 min-h-screen`}>
           {/* Mobile Header */}
-          {authenticatedWallet && (
-            <div className="md:hidden bg-black/20 backdrop-blur-sm border-b border-gray-700 p-4">
+          {authenticatedWallet && !showHomepage && (
+            <div className="md:hidden bg-black/20 backdrop-blur-sm border-b border-gray-700 p-3 md:p-4">
               <div className="flex items-center justify-between">
-                <h1 className="text-lg font-semibold text-white capitalize">
+                <h1 className="text-base md:text-lg font-semibold text-white capitalize">
                   {activeTab === 'inbox' ? 'Inbox' : 
                    activeTab === 'compose' ? 'Compose' :
                    activeTab === 'sent' ? 'Sent Messages' :
@@ -572,7 +566,7 @@ export default function Home() {
               </div>
             </div>
           )}
-          {!authenticatedWallet ? (
+          {!authenticatedWallet || showHomepage ? (
             <div className="flex items-center justify-center min-h-screen py-8 md:py-16">
               <div className="text-center max-w-5xl mx-auto px-4 md:px-8">
                 {/* Hero Section */}
@@ -975,14 +969,14 @@ export default function Home() {
               <div className={`${activeTab === 'inbox' ? 'w-full' : 'hidden'} bg-black/5 backdrop-blur-sm`}>
                 <div className="h-full flex flex-col">
                   {/* Inbox Header */}
-                  <div className="border-b border-purple-500/20 p-6 bg-black/10 backdrop-blur-lg pt-8">
-                    <div className="flex items-center justify-between">
-                      <h1 className="text-2xl font-bold text-white">Inbox</h1>
-                      <div className="flex items-center space-x-4">
-                        <button className="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors">
+                  <div className="border-b border-purple-500/20 p-4 md:p-6 bg-black/10 backdrop-blur-lg pt-6 md:pt-8">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <h1 className="text-xl md:text-2xl font-bold text-white">Inbox</h1>
+                      <div className="flex items-center space-x-2 md:space-x-4">
+                        <button className="text-cyan-400 hover:text-cyan-300 text-xs md:text-sm font-medium transition-colors">
                           Mark all as read
                         </button>
-                        <button className="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors">
+                        <button className="text-cyan-400 hover:text-cyan-300 text-xs md:text-sm font-medium transition-colors">
                           Select all
                         </button>
                       </div>
@@ -1007,9 +1001,9 @@ export default function Home() {
               <div className={`${activeTab === 'sent' ? 'w-full' : 'hidden'} bg-black/5 backdrop-blur-sm`}>
                 <div className="h-full flex flex-col">
                   {/* Sent Header */}
-                  <div className="border-b border-purple-500/20 p-6 bg-black/10 backdrop-blur-lg pt-8">
-                    <div className="flex items-center justify-between">
-                      <h1 className="text-2xl font-bold text-white">Sent Messages</h1>
+                  <div className="border-b border-purple-500/20 p-4 md:p-6 bg-black/10 backdrop-blur-lg pt-6 md:pt-8">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <h1 className="text-xl md:text-2xl font-bold text-white">Sent Messages</h1>
                       <div className="flex items-center space-x-4">
                         <button 
                           onClick={fetchSentMessages}
@@ -1076,9 +1070,9 @@ export default function Home() {
               <div className={`${activeTab === 'contacts' ? 'w-full' : 'hidden'} bg-black/5 backdrop-blur-sm`}>
                 <div className="h-full flex flex-col pt-4">
                   {/* Contacts Header */}
-                  <div className="border-b border-purple-500/20 p-6 bg-black/10 backdrop-blur-lg">
-                    <div className="flex items-center justify-between">
-                      <h1 className="text-2xl font-bold text-white">Contacts</h1>
+                  <div className="border-b border-purple-500/20 p-4 md:p-6 bg-black/10 backdrop-blur-lg pt-6 md:pt-8">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <h1 className="text-xl md:text-2xl font-bold text-white">Contacts</h1>
                       <button
                         onClick={() => setActiveTab('inbox')}
                         className="text-gray-400 hover:text-white transition-colors"
@@ -1101,9 +1095,9 @@ export default function Home() {
               <div className={`${activeTab === 'compose' ? 'w-full' : 'hidden'} bg-black/5 backdrop-blur-sm`}>
                 <div className="h-full flex flex-col pt-4">
                   {/* Compose Header */}
-                  <div className="border-b border-purple-500/20 p-6 bg-black/10 backdrop-blur-lg">
-                    <div className="flex items-center justify-between">
-                      <h1 className="text-2xl font-bold text-white">Compose</h1>
+                  <div className="border-b border-purple-500/20 p-4 md:p-6 bg-black/10 backdrop-blur-lg pt-6 md:pt-8">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <h1 className="text-xl md:text-2xl font-bold text-white">Compose</h1>
                       <button
                         onClick={() => setActiveTab('inbox')}
                         className="text-gray-400 hover:text-white transition-colors"
@@ -1116,7 +1110,7 @@ export default function Home() {
                   </div>
                   
                   {/* Compose Form */}
-                  <div className="flex-1 overflow-y-auto">
+                  <div className="flex-1 overflow-y-auto p-2 md:p-4">
                     <SendMessage 
                       onMessageSent={handleMessageSent} 
                       recipientAddress={replyToAddress || selectedContactAddress} 
