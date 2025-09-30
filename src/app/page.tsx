@@ -678,7 +678,7 @@ export default function Home() {
                     </p>
                         <div className="flex items-center justify-end gap-3 text-cyan-400 stagger-child scroll-reveal">
                           <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-                          <span className="text-sm font-medium">Military-grade security</span>
+                          <span className="text-sm font-medium">Bank-level encryption</span>
                         </div>
                       </div>
                     </div>
