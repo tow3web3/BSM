@@ -140,7 +140,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
           </div>
           
           <span className="text-sm font-medium text-white/80 group-hover:text-white transition-colors duration-200">
-            {connecting ? 'Connecting...' : 'Connect Wallet'}
+            {connecting ? 'Connecting...' : 'Start Messaging'}
           </span>
         </div>
         

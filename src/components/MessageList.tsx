@@ -25,6 +25,7 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
   const { decryptMessage } = useWallet();
   const [decryptedMessages, setDecryptedMessages] = useState<Record<string, string>>({});
   const [decrypting, setDecrypting] = useState<Record<string, boolean>>({});
+  const [expandedMessages, setExpandedMessages] = useState<Record<string, boolean>>({});
 
   const fetchMessages = useCallback(async () => {
     try {
@@ -79,11 +80,16 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
     try {
       const response = await fetch(`/api/messages/${messageId}?wallet=${walletAddress}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('sessionToken')}`
+        }
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to delete message');
+        console.error('Delete error:', errorData);
+        alert(errorData.error || 'Failed to delete message');
+        return;
       }
 
       // Remove message from local state
@@ -102,7 +108,7 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
       }
     } catch (error) {
       console.error('Error deleting message:', error);
-      setError(error instanceof Error ? error.message : 'Failed to delete message');
+      alert(error instanceof Error ? error.message : 'Failed to delete message');
     }
   };
 
@@ -222,9 +228,19 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
               {/* Message Preview */}
               <div className="mb-3">
                 {decryptedMessages[message.id] ? (
-                  <p className="text-gray-300 text-xs md:text-sm whitespace-pre-wrap break-words">
-                    {decryptedMessages[message.id]}
-                  </p>
+                  <div>
+                    <p className={`text-gray-300 text-xs md:text-sm whitespace-pre-wrap break-words ${!expandedMessages[message.id] && decryptedMessages[message.id].length > 150 ? 'line-clamp-3' : ''}`}>
+                      {decryptedMessages[message.id]}
+                    </p>
+                    {decryptedMessages[message.id].length > 150 && (
+                      <button
+                        onClick={() => setExpandedMessages(prev => ({ ...prev, [message.id]: !prev[message.id] }))}
+                        className="text-cyan-400 hover:text-cyan-300 text-xs font-medium mt-2 transition-colors"
+                      >
+                        {expandedMessages[message.id] ? 'Show less' : 'Read more'}
+                      </button>
+                    )}
+                  </div>
                 ) : (
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <p className="text-gray-400 text-xs md:text-sm break-all">
