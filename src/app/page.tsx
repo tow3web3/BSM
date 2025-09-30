@@ -571,13 +571,13 @@ export default function Home() {
               <div className="text-center max-w-5xl mx-auto px-4 md:px-8">
                 {/* Hero Section */}
                 <div className="mb-12 md:mb-24">
-                  <div className="relative mb-12 animate-scale-in opacity-0">
-                    <div className="w-40 h-40 flex items-center justify-center mx-auto relative">
+                  <div className="relative mb-6 md:mb-8 animate-scale-in opacity-0">
+                    <div className="w-48 h-48 md:w-56 md:h-56 flex items-center justify-center mx-auto relative">
                       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-full blur-2xl animate-pulse"></div>
                       <img 
                         src="/ChatGPT_Image_11_sept._2025_16_17_59.png" 
                         alt="SolanaMail Logo" 
-                        className="w-32 h-32 object-contain relative z-10"
+                        className="w-40 h-40 md:w-48 md:h-48 object-contain relative z-10"
                       />
                     </div>
                   </div>
