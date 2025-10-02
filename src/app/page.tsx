@@ -1134,8 +1134,8 @@ export default function Home() {
                 
                 {/* Animated Text */}
                 <div className="relative">
-                  <div className="text-lg font-mono text-cyan-400 tracking-wider animate-typewriter">
-                    CA: TBA
+                  <div className="text-lg font-mono text-cyan-400 tracking-wider animate-typewriter break-all">
+                    CA: 3g34a1Mr1KpVRZrSGNchsGKAp3mgYytuLXvb1PBVpump
                   </div>
                   
                   {/* Cursor Animation */}
@@ -1145,7 +1145,7 @@ export default function Home() {
                 {/* Copy Button */}
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText('TBA');
+                    navigator.clipboard.writeText('3g34a1Mr1KpVRZrSGNchsGKAp3mgYytuLXvb1PBVpump');
                     // You could add a toast notification here
                   }}
                   className="mt-6 bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center mx-auto"
