@@ -5,7 +5,7 @@ import { createConfig, http, WagmiProvider, useAccount, useDisconnect, useSignMe
 import { bsc, bscTestnet } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createWeb3Modal } from '@web3modal/wagmi';
-import { walletConnect } from 'wagmi/connectors';
+import { walletConnect, injected, coinbaseWallet } from 'wagmi/connectors';
 import { decryptMessageWithWallet } from '@/lib/encryption';
 
 // Web3Modal configuration
@@ -16,10 +16,10 @@ const metadata = {
   name: 'Binance Smart Mail',
   description: 'Secure blockchain messaging on Binance Smart Chain',
   url: typeof window !== 'undefined' ? window.location.origin : 'https://binancesmartmail.com',
-  icons: ['/BSM.png']
+  icons: ['https://binancesmartmail.com/BSM.png']
 };
 
-// Create wagmi config
+// Create wagmi config with multiple connectors
 const config = createConfig({
   chains: [bsc, bscTestnet],
   transports: {
@@ -27,20 +27,34 @@ const config = createConfig({
     [bscTestnet.id]: http(),
   },
   connectors: [
-    walletConnect({ projectId, metadata, showQrModal: false })
+    injected({ shimDisconnect: true }),
+    walletConnect({ 
+      projectId, 
+      metadata,
+      showQrModal: false 
+    }),
+    coinbaseWallet({
+      appName: 'Binance Smart Mail',
+      appLogoUrl: 'https://binancesmartmail.com/BSM.png'
+    })
   ],
 });
 
-// Create Web3Modal and store reference
+// Create Web3Modal
+let modal: any;
 if (typeof window !== 'undefined') {
-  const modal = createWeb3Modal({
+  modal = createWeb3Modal({
     wagmiConfig: config,
     projectId,
     enableAnalytics: true,
-    enableOnramp: true,
+    enableOnramp: false,
+    themeMode: 'dark',
+    themeVariables: {
+      '--w3m-accent': '#F0B90B',
+      '--w3m-color-mix': '#0B0E11',
+      '--w3m-color-mix-strength': 40
+    }
   });
-  // Store modal instance globally for access
-  (window as any).modal = modal;
 }
 
 const queryClient = new QueryClient();
@@ -52,6 +66,7 @@ interface WalletContextType {
   disconnect: () => void;
   signMessage: (message: string) => Promise<string | null>;
   decryptMessage: (ciphertext: string, nonce: string, ephPub: string, fromWallet?: string) => string | null;
+  openModal: () => void;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -106,6 +121,12 @@ function WalletContextProvider({ children }: WalletProviderProps) {
     }
   };
 
+  const openModal = () => {
+    if (modal) {
+      modal.open();
+    }
+  };
+
   const value: WalletContextType = {
     address,
     connected: isConnected,
@@ -113,6 +134,7 @@ function WalletContextProvider({ children }: WalletProviderProps) {
     disconnect,
     signMessage,
     decryptMessage: decryptMessageLocal,
+    openModal,
   };
 
   return (

@@ -8,15 +8,8 @@ interface WalletButtonProps {
   onAuthSuccess?: (address: string) => void;
 }
 
-// Access the Web3Modal instance globally
-const openWeb3Modal = () => {
-  if (typeof window !== 'undefined' && (window as any).modal) {
-    (window as any).modal.open();
-  }
-};
-
 export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
-  const { address, connected, connecting, disconnect, signMessage } = useWallet();
+  const { address, connected, connecting, disconnect, signMessage, openModal } = useWallet();
   const [authenticating, setAuthenticating] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [hasSessionToken, setHasSessionToken] = useState(false);
@@ -35,7 +28,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
   }, [connected, isClient]);
 
   const handleConnect = () => {
-    openWeb3Modal();
+    openModal();
   };
 
   const handleAuthenticate = async () => {
@@ -121,7 +114,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
               </svg>
             ) : (
               <svg 
-                className="w-5 h-5 text-white transition-colors duration-200" 
+                className="w-5 h-5 text-black transition-colors duration-200" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -136,7 +129,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
             )}
           </div>
           
-          <span className="text-sm font-medium text-white transition-colors duration-200">
+          <span className="text-sm font-medium text-black transition-colors duration-200">
             {connecting ? 'Connecting...' : 'Start Messaging'}
           </span>
         </div>
@@ -207,7 +200,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
       {/* Wallet Info */}
       <div className="hidden sm:flex items-center gap-3 px-4 py-2 rounded-lg bg-white/5 border border-white/10 backdrop-blur-sm">
         <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center">
-          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+          <div className="w-2 h-2 bg-black rounded-full animate-pulse"></div>
         </div>
         <span className="text-xs font-mono text-white/70 tracking-wider">
           {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : ''}
