@@ -139,7 +139,7 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-cyan-400 rounded-xl flex items-center justify-center mx-auto mb-4 animate-pulse">
+          <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center mx-auto mb-4 animate-pulse">
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
             </svg>
@@ -162,7 +162,7 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
           <p className="text-red-400 mb-4">{error}</p>
           <button
             onClick={fetchMessages}
-            className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-cyan-600 transition-all duration-300"
+            className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black px-4 py-2 rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300"
           >
             Retry
           </button>
@@ -175,7 +175,7 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-purple-500/20 to-cyan-400/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
             </svg>
@@ -197,12 +197,12 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
       {messages.map((message) => (
         <div
           key={message.id}
-          className="group bg-gray-800/30 hover:bg-gray-800/50 rounded-xl p-3 md:p-4 transition-all duration-300 border border-gray-700/50 hover:border-purple-500/30 cursor-pointer"
+          className="group bg-gray-800/30 hover:bg-gray-800/50 rounded-xl p-3 md:p-4 transition-all duration-300 border border-gray-700/50 hover:border-yellow-500/30 cursor-pointer"
         >
           <div className="flex items-start space-x-2 md:space-x-4">
             {/* Avatar */}
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-purple-500 to-cyan-400 rounded-xl flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-xs md:text-sm">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span className="text-black font-bold text-xs md:text-sm">
                 {message.fromWallet.slice(0, 2).toUpperCase()}
               </span>
             </div>
@@ -212,10 +212,10 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
                   <span className="text-white font-semibold text-sm">
-                    {message.fromWallet === 'SolanaMail System' ? 'SolanaMail System' : truncateAddress(message.fromWallet)}
+                    {message.fromWallet === 'Binance Smart Mail System' ? 'Binance Smart Mail System' : truncateAddress(message.fromWallet)}
                   </span>
-                  {message.fromWallet === 'SolanaMail System' && (
-                    <span className="bg-gradient-to-r from-purple-600 to-cyan-500 text-xs text-white px-2 py-1 rounded-full">
+                  {message.fromWallet === 'Binance Smart Mail System' && (
+                    <span className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-xs text-white px-2 py-1 rounded-full">
                       System
                     </span>
                   )}
@@ -235,7 +235,7 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
                     {decryptedMessages[message.id].length > 150 && (
                       <button
                         onClick={() => setExpandedMessages(prev => ({ ...prev, [message.id]: !prev[message.id] }))}
-                        className="text-cyan-400 hover:text-cyan-300 text-xs font-medium mt-2 transition-colors"
+                        className="text-yellow-500 hover:text-yellow-400 text-xs font-medium mt-2 transition-colors"
                       >
                         {expandedMessages[message.id] ? 'Show less' : 'Read more'}
                       </button>
@@ -249,7 +249,7 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
                     <button
                       onClick={() => handleDecryptMessage(message.id, message.ciphertext, message.nonce, message.ephPub, message.fromWallet)}
                       disabled={decrypting[message.id]}
-                      className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 whitespace-nowrap"
+                      className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 whitespace-nowrap"
                     >
                       {decrypting[message.id] ? (
                         <div className="flex items-center space-x-1">
@@ -269,10 +269,10 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
 
               {/* Message Actions */}
               <div className="flex items-center space-x-2 md:space-x-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-                {message.fromWallet !== 'SolanaMail System' && (
+                {message.fromWallet !== 'Binance Smart Mail System' && (
                   <button 
                     onClick={() => onReply && onReply(message.fromWallet)}
-                    className="text-cyan-400 hover:text-cyan-300 text-xs font-medium"
+                    className="text-yellow-500 hover:text-yellow-400 text-xs font-medium"
                   >
                     Reply
                   </button>

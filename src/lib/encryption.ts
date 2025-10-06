@@ -1,5 +1,4 @@
 import nacl from 'tweetnacl';
-import { PublicKey } from '@solana/web3.js';
 
 /**
  * Génère une paire de clés éphémères pour le chiffrement
@@ -9,11 +8,11 @@ export function generateEphemeralKeyPair() {
 }
 
 /**
- * Chiffre un message avec la clé publique du destinataire
+ * Chiffre un message avec la clé publique du destinataire (BSC/Ethereum)
  */
 export function encryptMessage(
   message: string,
-  recipientPublicKey: PublicKey,
+  recipientAddress: string,
   ephemeralKeyPair: nacl.BoxKeyPair
 ): {
   ciphertext: string;
@@ -23,19 +22,14 @@ export function encryptMessage(
   const messageBytes = new TextEncoder().encode(message);
   const nonce = nacl.randomBytes(24);
   
-  // Convertir la clé publique Solana en format nacl
-  const recipientBytes = recipientPublicKey.toBytes();
+  // Derive a key from the recipient's address
+  const recipientKey = derivePrivateKeyFromWallet(recipientAddress);
   
-  // Chiffrer le message
-  const ciphertext = nacl.box(
-    messageBytes,
-    nonce,
-    recipientBytes,
-    ephemeralKeyPair.secretKey
-  );
+  // Encrypt the message using secretbox
+  const ciphertext = nacl.secretbox(messageBytes, nonce, recipientKey);
   
   if (!ciphertext) {
-    throw new Error('Échec du chiffrement du message');
+    throw new Error('Failed to encrypt message');
   }
   
   return {
@@ -150,7 +144,7 @@ export function decryptMessageWithWallet(
 ): string {
   try {
     // Si c'est un message système, décoder directement le base64
-    if (fromWallet === 'SolanaMail System') {
+    if (fromWallet === 'Binance Smart Mail System') {
       return Buffer.from(ciphertext, 'base64').toString('utf-8');
     }
     

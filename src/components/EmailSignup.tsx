@@ -44,33 +44,33 @@ export default function EmailSignup({ className = '', variant = 'hero' }: EmailS
     switch (variant) {
       case 'hero':
         return {
-          container: 'bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10',
-          input: 'w-full px-6 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent',
-          button: 'bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25',
+          container: 'bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-yellow-500/20',
+          input: 'w-full px-6 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent',
+          button: 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-yellow-500/25',
           title: 'text-2xl font-bold text-white mb-4',
           description: 'text-gray-300 mb-6'
         };
       case 'footer':
         return {
           container: 'bg-gray-800/50 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50',
-          input: 'w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent',
-          button: 'bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300',
+          input: 'w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent',
+          button: 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black px-6 py-3 rounded-lg font-medium transition-all duration-300',
           title: 'text-lg font-semibold text-white mb-3',
           description: 'text-gray-400 mb-4 text-sm'
         };
       case 'modal':
         return {
           container: 'bg-gray-800 border border-gray-700 rounded-xl p-6',
-          input: 'w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent',
-          button: 'bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300',
+          input: 'w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent',
+          button: 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black px-6 py-3 rounded-lg font-medium transition-all duration-300',
           title: 'text-xl font-bold text-white mb-4',
           description: 'text-gray-300 mb-6'
         };
       default:
         return {
-          container: 'bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10',
-          input: 'w-full px-6 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent',
-          button: 'bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-purple-500/25',
+          container: 'bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-yellow-500/20',
+          input: 'w-full px-6 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent',
+          button: 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-yellow-500/25',
           title: 'text-2xl font-bold text-white mb-4',
           description: 'text-gray-300 mb-6'
         };

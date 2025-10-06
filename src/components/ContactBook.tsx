@@ -17,7 +17,7 @@ interface ContactBookProps {
 }
 
 export default function ContactBook({ onSelectContact }: ContactBookProps) {
-  const { publicKey } = useWallet();
+  const { address } = useWallet();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,11 +27,11 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
   const [isClient, setIsClient] = useState(false);
 
   const fetchContacts = useCallback(async () => {
-    if (!publicKey) return;
+    if (!address) return;
     
     try {
       setLoading(true);
-      const response = await fetch(`/api/contacts?wallet=${publicKey.toString()}`);
+      const response = await fetch(`/api/contacts?wallet=${address}`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch contacts');
@@ -45,31 +45,27 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
     } finally {
       setLoading(false);
     }
-  }, [publicKey]);
+  }, [address]);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
-    if (isClient && publicKey) {
+    if (isClient && address) {
       fetchContacts();
     }
-  }, [isClient, publicKey, fetchContacts]);
+  }, [isClient, address, fetchContacts]);
 
-  const validateWalletAddress = (address: string): boolean => {
-    try {
-      new (require('@solana/web3.js').PublicKey)(address);
-      return true;
-    } catch {
-      return false;
-    }
+  const validateWalletAddress = (walletAddress: string): boolean => {
+    // BSC address validation: must start with 0x and be 42 characters long
+    return /^0x[a-fA-F0-9]{40}$/.test(walletAddress);
   };
 
   const handleAddContact = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!publicKey) return;
+    if (!address) return;
     
     if (!newContact.name.trim() || !newContact.address.trim()) {
       setError('Name and address are required');
@@ -88,7 +84,7 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ownerWallet: publicKey.toString(),
+          ownerWallet: address,
           name: newContact.name.trim(),
           address: newContact.address.trim(),
         }),
@@ -174,11 +170,11 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
     );
   }
 
-  if (!publicKey) {
+  if (!address) {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gray-800 border border-gray-700 flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
@@ -193,14 +189,14 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
   return (
     <div className="h-full flex flex-col">
       {/* Add Contact Button */}
-      <div className="p-6 border-b border-purple-500/20">
+      <div className="p-6 border-b border-yellow-500/20">
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="w-full bg-gray-800 border border-gray-700 text-white px-6 py-3 font-medium hover:bg-gray-700 transition-colors flex items-center justify-center"
+          className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-yellow-500/30 flex items-center justify-center"
         >
           <div className="flex items-center space-x-3">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
             <span>{showAddForm ? 'Cancel' : 'Add New Contact'}</span>
           </div>
@@ -209,7 +205,7 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
 
       {/* Add Contact Form */}
       {showAddForm && (
-        <div className="p-6 border-b border-purple-500/20 bg-black/5">
+        <div className="p-6 border-b border-yellow-500/20 bg-black/5">
           <h3 className="text-lg font-medium text-white mb-4">Add New Contact</h3>
           <form onSubmit={handleAddContact} className="space-y-4">
             <div>
@@ -218,33 +214,33 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
                 type="text"
                 value={newContact.name}
                 onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
                 placeholder="Enter contact name"
                 required
               />
             </div>
             <div>
-              <label className="block text-gray-300 mb-2 text-sm font-medium">Solana Address</label>
+              <label className="block text-gray-300 mb-2 text-sm font-medium">BSC Address</label>
               <input
                 type="text"
                 value={newContact.address}
                 onChange={(e) => setNewContact({ ...newContact, address: e.target.value })}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="Enter Solana wallet address"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
+                placeholder="Enter BSC wallet address (0x...)"
                 required
               />
             </div>
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="bg-gray-800 border border-gray-700 text-white px-6 py-3 font-medium hover:bg-gray-700 transition-colors"
+                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black px-6 py-3 rounded-lg font-semibold transition-all duration-300"
               >
                 Add Contact
               </button>
               <button
                 type="button"
                 onClick={() => setShowAddForm(false)}
-                className="bg-gray-700 border border-gray-600 text-white px-6 py-3 font-medium hover:bg-gray-600 transition-colors"
+                className="bg-gray-800/50 border border-gray-700 text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-700/50 hover:text-white transition-all duration-300"
               >
                 Cancel
               </button>
@@ -269,7 +265,7 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
           </div>
         ) : contacts.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-gray-800 border border-gray-700 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
@@ -278,7 +274,7 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
             <p className="text-gray-400 mb-6">Add your first contact to get started!</p>
             <button
               onClick={() => setShowAddForm(true)}
-              className="bg-gray-800 border border-gray-700 text-white px-6 py-3 font-medium hover:bg-gray-700 transition-colors"
+              className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black px-6 py-3 rounded-xl font-semibold transition-all duration-300"
             >
               Add Contact
             </button>
@@ -288,7 +284,7 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
             {contacts.map((contact) => (
               <div
                 key={contact.id}
-                className="bg-gray-800 border border-gray-700 p-4 hover:border-gray-600 transition-colors"
+                className="bg-gray-900/50 border border-gray-800 hover:border-yellow-500/30 rounded-xl p-4 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/5"
               >
                 {editingContact?.id === contact.id ? (
                   <form onSubmit={handleUpdateContact} className="space-y-4">
@@ -296,7 +292,7 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
                       type="text"
                       value={editingContact.name}
                       onChange={(e) => setEditingContact({ ...editingContact, name: e.target.value })}
-                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
                       required
                     />
                     <div className="text-xs text-gray-400 font-mono break-all">
@@ -305,14 +301,14 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
                     <div className="flex gap-2">
                       <button
                         type="submit"
-                        className="bg-gray-700 border border-gray-600 text-white px-3 py-1 text-sm font-medium hover:bg-gray-600 transition-colors"
+                        className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300"
                       >
                         Save
                       </button>
                       <button
                         type="button"
                         onClick={() => setEditingContact(null)}
-                        className="bg-gray-600 border border-gray-500 text-white px-3 py-1 text-sm font-medium hover:bg-gray-500 transition-colors"
+                        className="bg-gray-800/50 border border-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-700/50 hover:text-white transition-all duration-300"
                       >
                         Cancel
                       </button>
@@ -332,32 +328,32 @@ export default function ContactBook({ onSelectContact }: ContactBookProps) {
                       </div>
                       <div className="flex items-center space-x-2 ml-4">
                         {onSelectContact && (
-                          <button
-                            onClick={() => handleSelectContact(contact.address)}
-                            className="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors"
-                            title="Select for messaging"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                            </svg>
-                          </button>
+                        <button
+                          onClick={() => handleSelectContact(contact.address)}
+                          className="p-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 hover:bg-yellow-500/20 hover:text-yellow-400 transition-all duration-300"
+                          title="Send message to this contact"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                          </svg>
+                        </button>
                         )}
                         <button
                           onClick={() => setEditingContact(contact)}
-                          className="text-yellow-400 hover:text-yellow-300 text-sm font-medium transition-colors"
+                          className="p-2 rounded-lg text-gray-400 hover:text-yellow-500 hover:bg-gray-800/50 transition-all duration-300"
                           title="Edit contact"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>
                         </button>
                         <button
                           onClick={() => handleDeleteContact(contact.id)}
-                          className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
+                          className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300"
                           title="Delete contact"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
                       </div>

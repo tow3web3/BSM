@@ -1,32 +1,56 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useWallet as useWalletAdapter } from '@solana/wallet-adapter-react';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import {
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-  TrustWalletAdapter,
-  CoinbaseWalletAdapter,
-  SolongWalletAdapter,
-  TorusWalletAdapter,
-} from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
-import { PublicKey } from '@solana/web3.js';
-import { generateEncryptionKey } from '@/lib/solana-auth';
+import React, { createContext, useContext, ReactNode } from 'react';
+import { createConfig, http, WagmiProvider, useAccount, useDisconnect, useSignMessage } from 'wagmi';
+import { bsc, bscTestnet } from 'wagmi/chains';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createWeb3Modal } from '@web3modal/wagmi';
+import { walletConnect } from 'wagmi/connectors';
 import { decryptMessageWithWallet } from '@/lib/encryption';
 
-// Import des styles du wallet adapter
-import '@solana/wallet-adapter-react-ui/styles.css';
+// Web3Modal configuration
+const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6';
+
+// Metadata for the app
+const metadata = {
+  name: 'Binance Smart Mail',
+  description: 'Secure blockchain messaging on Binance Smart Chain',
+  url: typeof window !== 'undefined' ? window.location.origin : 'https://binancesmartmail.com',
+  icons: ['/BSM.png']
+};
+
+// Create wagmi config
+const config = createConfig({
+  chains: [bsc, bscTestnet],
+  transports: {
+    [bsc.id]: http(),
+    [bscTestnet.id]: http(),
+  },
+  connectors: [
+    walletConnect({ projectId, metadata, showQrModal: false })
+  ],
+});
+
+// Create Web3Modal and store reference
+if (typeof window !== 'undefined') {
+  const modal = createWeb3Modal({
+    wagmiConfig: config,
+    projectId,
+    enableAnalytics: true,
+    enableOnramp: true,
+  });
+  // Store modal instance globally for access
+  (window as any).modal = modal;
+}
+
+const queryClient = new QueryClient();
 
 interface WalletContextType {
-  publicKey: PublicKey | null;
+  address: string | undefined;
   connected: boolean;
   connecting: boolean;
-  disconnect: () => Promise<void>;
-  signMessage: (message: string) => Promise<Uint8Array | null>;
+  disconnect: () => void;
+  signMessage: (message: string) => Promise<string | null>;
   decryptMessage: (ciphertext: string, nonce: string, ephPub: string, fromWallet?: string) => string | null;
 }
 
@@ -46,74 +70,46 @@ interface WalletProviderProps {
 
 // Composant pour fournir le contexte wallet
 function WalletContextProvider({ children }: WalletProviderProps) {
-  const { publicKey, connected, connecting, disconnect: disconnectAdapter, signMessage: signMessageAdapter } = useWalletAdapter();
-  const [_encryptionKey, setEncryptionKey] = useState<Uint8Array | null>(null);
+  const { address, isConnected, isConnecting } = useAccount();
+  const { disconnect: disconnectWallet } = useDisconnect();
+  const { signMessageAsync } = useSignMessage();
 
-  useEffect(() => {
-    if (!connected) {
-      setEncryptionKey(null);
-    }
-  }, [connected]);
-
-  const disconnect = async () => {
-    await disconnectAdapter();
-    setEncryptionKey(null);
+  const disconnect = () => {
+    disconnectWallet();
   };
 
-  const signMessage = async (message: string): Promise<Uint8Array | null> => {
-    if (!publicKey || !connected || !signMessageAdapter) {
-      throw new Error('Wallet non connecté');
+  const signMessage = async (message: string): Promise<string | null> => {
+    if (!address || !isConnected) {
+      throw new Error('Wallet not connected');
     }
 
     try {
-      const encodedMessage = new TextEncoder().encode(message);
-      const signature = await signMessageAdapter(encodedMessage);
-      
-      // Convertir la signature en Uint8Array si nécessaire
-      let signatureBytes: Uint8Array;
-      if (signature instanceof Uint8Array) {
-        signatureBytes = signature;
-      } else if (Array.isArray(signature)) {
-        signatureBytes = new Uint8Array(signature);
-      } else {
-        // Fallback: essayer de convertir en Uint8Array
-        throw new Error('Format de signature non supporté');
-      }
-      
-      // Générer la clé de chiffrement à partir de la signature
-      const key = generateEncryptionKey({
-        publicKey: publicKey!,
-        signature: signatureBytes,
-        message,
-      });
-      setEncryptionKey(key);
-      
-      return signatureBytes;
+      const signature = await signMessageAsync({ message });
+      return signature;
     } catch (error) {
-      console.error('Erreur lors de la signature:', error);
+      console.error('Error signing message:', error);
       throw error;
     }
   };
 
   const decryptMessageLocal = (ciphertext: string, nonce: string, ephPub: string, fromWallet?: string): string | null => {
-    if (!publicKey) {
-      console.error('Wallet non connecté');
+    if (!address) {
+      console.error('Wallet not connected');
       return null;
     }
 
     try {
-      // Utiliser la nouvelle fonction qui dérive la clé à partir de l'adresse du wallet
-      return decryptMessageWithWallet(ciphertext, nonce, ephPub, publicKey.toString(), fromWallet);
+      return decryptMessageWithWallet(ciphertext, nonce, ephPub, address, fromWallet);
     } catch (error) {
-      console.error('Erreur lors du déchiffrement:', error);
+      console.error('Error decrypting message:', error);
       return null;
     }
   };
 
   const value: WalletContextType = {
-    publicKey,
-    connected,
-    connecting,
+    address,
+    connected: isConnected,
+    connecting: isConnecting,
     disconnect,
     signMessage,
     decryptMessage: decryptMessageLocal,
@@ -127,35 +123,21 @@ function WalletContextProvider({ children }: WalletProviderProps) {
 }
 
 // Provider principal qui configure les wallets
-export function SolanaWalletProvider({ children }: WalletProviderProps) {
-  const network = WalletAdapterNetwork.Devnet;
-  const endpoint = clusterApiUrl(network);
-
-  const wallets = [
-    new PhantomWalletAdapter(),
-    new SolflareWalletAdapter(),
-    new TrustWalletAdapter(),
-    new CoinbaseWalletAdapter(),
-    new SolongWalletAdapter(),
-    new TorusWalletAdapter(),
-  ];
-
+export function BSCWalletProvider({ children }: WalletProviderProps) {
   return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>
-          <WalletContextProvider>
-            {children}
-          </WalletContextProvider>
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <WalletContextProvider>
+          {children}
+        </WalletContextProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }
 
 // Déclaration globale pour TypeScript
 declare global {
   interface Window {
-    solana?: any;
+    ethereum?: any;
   }
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { PublicKey } from '@solana/web3.js';
+import { isValidAddress } from '@/lib/bsc-auth';
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,12 +14,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Vérifier que l'adresse est valide
-    try {
-      new PublicKey(walletAddress);
-    } catch {
+    // Verify that the address is valid (BSC format)
+    if (!isValidAddress(walletAddress)) {
       return NextResponse.json(
-        { error: 'Invalid wallet address' },
+        { error: 'Invalid BSC wallet address' },
         { status: 400 }
       );
     }
@@ -75,13 +73,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Vérifier que les adresses sont valides
-    try {
-      new PublicKey(fromWallet);
-      new PublicKey(toWallet);
-    } catch {
+    // Verify that the addresses are valid (BSC format)
+    if (!isValidAddress(fromWallet) || !isValidAddress(toWallet)) {
       return NextResponse.json(
-        { error: 'Invalid wallet addresses' },
+        { error: 'Invalid BSC wallet addresses' },
         { status: 400 }
       );
     }

@@ -2,16 +2,21 @@
 
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '@/contexts/WalletContext';
-import { useWalletModal } from '@solana/wallet-adapter-react-ui';
-import { generateAuthMessage } from '@/lib/solana-auth';
+import { generateAuthMessage } from '@/lib/bsc-auth';
 
 interface WalletButtonProps {
-  onAuthSuccess?: (publicKey: string) => void;
+  onAuthSuccess?: (address: string) => void;
 }
 
+// Access the Web3Modal instance globally
+const openWeb3Modal = () => {
+  if (typeof window !== 'undefined' && (window as any).modal) {
+    (window as any).modal.open();
+  }
+};
+
 export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
-  const { publicKey, connected, connecting, disconnect, signMessage } = useWallet();
-  const { setVisible } = useWalletModal();
+  const { address, connected, connecting, disconnect, signMessage } = useWallet();
   const [authenticating, setAuthenticating] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [hasSessionToken, setHasSessionToken] = useState(false);
@@ -30,38 +35,30 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
   }, [connected, isClient]);
 
   const handleConnect = () => {
-    setVisible(true);
+    openWeb3Modal();
   };
 
   const handleAuthenticate = async () => {
-    if (!publicKey) return;
+    if (!address) return;
 
     setAuthenticating(true);
     try {
-      // Générer le message d'authentification
-      const authMessage = generateAuthMessage(publicKey);
+      // Generate authentication message
+      const authMessage = generateAuthMessage(address);
       
-      // Signer le message
+      // Sign the message
       const signature = await signMessage(authMessage);
       
       if (signature) {
-        // Convertir la signature en base64
-        let signatureBase64: string;
-        if (signature instanceof Uint8Array) {
-          signatureBase64 = Buffer.from(signature).toString('base64');
-        } else {
-          signatureBase64 = Buffer.from(new Uint8Array(signature)).toString('base64');
-        }
-        
-        // Envoyer l'authentification au serveur
+        // Send authentication to server
         const response = await fetch('/api/auth', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            publicKey: publicKey.toString(),
-            signature: signatureBase64,
+            publicKey: address,
+            signature: signature,
             message: authMessage,
           }),
         });
@@ -71,7 +68,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
         if (result.success) {
           localStorage.setItem('sessionToken', result.sessionToken);
           setHasSessionToken(true);
-          onAuthSuccess?.(publicKey.toString());
+          onAuthSuccess?.(address);
         } else {
           alert('Authentication error: ' + result.error);
         }
@@ -96,9 +93,9 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
       <button
         onClick={handleConnect}
         disabled={connecting}
-        className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 border-none transition-all duration-300 ease-out disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+        className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 border-none transition-all duration-300 ease-out disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
         <div className="relative flex items-center gap-3 px-6 py-3">
           <div className="flex items-center justify-center w-5 h-5">
@@ -152,15 +149,15 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
       <button
         onClick={handleAuthenticate}
         disabled={authenticating}
-        className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-500/10 to-cyan-500/10 border border-purple-500/20 hover:border-purple-500/40 backdrop-blur-sm transition-all duration-300 ease-out hover:from-purple-500/20 hover:to-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border border-yellow-500/20 hover:border-yellow-500/40 backdrop-blur-sm transition-all duration-300 ease-out hover:from-yellow-500/20 hover:to-yellow-600/20 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-yellow-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
         <div className="relative flex items-center gap-3 px-6 py-3">
           <div className="flex items-center justify-center w-5 h-5">
             {authenticating ? (
               <svg 
-                className="animate-spin w-5 h-5 text-purple-400" 
+                className="animate-spin w-5 h-5 text-yellow-400" 
                 fill="none" 
                 viewBox="0 0 24 24"
               >
@@ -180,7 +177,7 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
               </svg>
             ) : (
               <svg 
-                className="w-5 h-5 text-purple-400 group-hover:text-purple-300 transition-colors duration-200" 
+                className="w-5 h-5 text-yellow-400 group-hover:text-yellow-300 transition-colors duration-200" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -195,12 +192,12 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
             )}
           </div>
           
-          <span className="text-sm font-medium text-purple-300 group-hover:text-purple-200 transition-colors duration-200">
+          <span className="text-sm font-medium text-yellow-300 group-hover:text-yellow-200 transition-colors duration-200">
             {authenticating ? 'Authenticating...' : 'Sign In'}
           </span>
         </div>
         
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/60 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-yellow-500/60 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
       </button>
     );
   }
@@ -209,11 +206,11 @@ export default function WalletButton({ onAuthSuccess }: WalletButtonProps) {
     <div className="flex items-center gap-3">
       {/* Wallet Info */}
       <div className="hidden sm:flex items-center gap-3 px-4 py-2 rounded-lg bg-white/5 border border-white/10 backdrop-blur-sm">
-        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center">
+        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center">
           <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
         </div>
         <span className="text-xs font-mono text-white/70 tracking-wider">
-          {publicKey ? `${publicKey.toString().slice(0, 6)}...${publicKey.toString().slice(-4)}` : ''}
+          {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : ''}
         </span>
       </div>
 

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '@/contexts/WalletContext';
-import { PublicKey } from '@solana/web3.js';
+import { isValidAddress } from '@/lib/bsc-auth';
 import { encryptMessageForWallet } from '@/lib/encryption';
 
 interface SendMessageProps {
@@ -11,7 +11,7 @@ interface SendMessageProps {
 }
 
 export default function SendMessage({ onMessageSent, recipientAddress: initialRecipient }: SendMessageProps) {
-  const { publicKey } = useWallet();
+  const { address } = useWallet();
   const [recipientAddress, setRecipientAddress] = useState(initialRecipient || '');
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
@@ -27,18 +27,13 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
   }, [initialRecipient]);
 
   const validateWalletAddress = (address: string): boolean => {
-    try {
-      new PublicKey(address);
-      return true;
-    } catch {
-      return false;
-    }
+    return isValidAddress(address);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!publicKey) {
+    if (!address) {
       setError('Wallet not connected');
       return;
     }
@@ -69,7 +64,7 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
 
     try {
       // Chiffrer le message avec la nouvelle méthode
-      const encrypted = encryptMessageForWallet(message, recipientAddress, publicKey.toString());
+      const encrypted = encryptMessageForWallet(message, recipientAddress, address);
       
       // Envoyer le message chiffré au serveur
       const response = await fetch('/api/messages', {
@@ -79,7 +74,7 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
           'Authorization': `Bearer ${localStorage.getItem('sessionToken')}`
         },
         body: JSON.stringify({
-          fromWallet: publicKey.toString(),
+          fromWallet: address,
           toWallet: recipientAddress,
           ciphertext: encrypted.ciphertext,
           nonce: encrypted.nonce,
@@ -123,10 +118,10 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
               value={recipientAddress}
               onChange={(e) => setRecipientAddress(e.target.value)}
               placeholder="Enter recipient wallet address..."
-              className="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300"
+              className="w-full px-3 md:px-4 py-2 md:py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 transition-all duration-300"
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-cyan-400 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center">
                 <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"/>
                 </svg>
@@ -146,7 +141,7 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your encrypted message here..."
             rows={8}
-            className="w-full h-40 md:h-64 px-3 md:px-4 py-2 md:py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 resize-none"
+            className="w-full h-40 md:h-64 px-3 md:px-4 py-2 md:py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 transition-all duration-300 resize-none"
           />
         </div>
 
@@ -178,7 +173,7 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
           <button
             type="submit"
             disabled={sending || !message.trim() || !recipientAddress.trim()}
-            className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white px-4 md:px-8 py-2 md:py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-300 flex items-center space-x-2 md:space-x-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black px-4 md:px-8 py-2 md:py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-300 flex items-center space-x-2 md:space-x-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
             {sending ? (
               <>
@@ -203,8 +198,8 @@ export default function SendMessage({ onMessageSent, recipientAddress: initialRe
       {/* Security Info */}
       <div className="mt-6 p-4 bg-gray-800/30 rounded-xl border border-gray-700/50">
         <div className="flex items-start space-x-3">
-          <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-            <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-8 h-8 bg-yellow-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg className="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>

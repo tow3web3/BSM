@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAuthSignature, generateAuthMessage } from '@/lib/solana-auth';
-import { PublicKey } from '@solana/web3.js';
+import { verifyAuthSignature, isValidAddress } from '@/lib/bsc-auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,25 +8,21 @@ export async function POST(request: NextRequest) {
 
     if (!publicKey || !signature || !message) {
       return NextResponse.json(
-        { error: 'Public key, signature and message required' },
+        { error: 'Wallet address, signature and message required' },
         { status: 400 }
       );
     }
 
-    // Vérifier que l'adresse publique est valide
-    let walletPublicKey: PublicKey;
-    try {
-      walletPublicKey = new PublicKey(publicKey);
-    } catch {
+    // Verify that the address is valid (BSC format)
+    if (!isValidAddress(publicKey)) {
       return NextResponse.json(
-        { error: 'Invalid wallet address' },
+        { error: 'Invalid BSC wallet address' },
         { status: 400 }
       );
     }
 
-    // Vérifier la signature
-    const signatureBytes = new Uint8Array(Buffer.from(signature, 'base64'));
-    const isValid = verifyAuthSignature(walletPublicKey, message, signatureBytes);
+    // Verify the signature
+    const isValid = verifyAuthSignature(publicKey, message, signature);
 
     if (!isValid) {
       return NextResponse.json(
@@ -36,61 +31,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Générer un token de session simple (en production, utilisez JWT)
-    const sessionToken = Buffer.from(
-      `${publicKey}:${Date.now()}:${Math.random()}`
-    ).toString('base64');
+    // Generate session token (in production, use JWT with secret)
+    const sessionToken = Buffer.from(`${publicKey}:${Date.now()}`).toString('base64');
 
     return NextResponse.json({
       success: true,
       sessionToken,
-      wallet: {
-        publicKey: publicKey,
-      },
+      walletAddress: publicKey,
     });
-  } catch (err) {
-    console.error('Erreur lors de l\'authentification:', err);
+  } catch (error) {
+    console.error('Authentication error:', error);
     return NextResponse.json(
-      { error: 'Erreur interne du serveur' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const walletAddress = searchParams.get('wallet');
-
-    if (!walletAddress) {
-      return NextResponse.json(
-        { error: 'Wallet address required' },
-        { status: 400 }
-      );
-    }
-
-    // Vérifier que l'adresse est valide
-    try {
-      new PublicKey(walletAddress);
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid wallet address' },
-        { status: 400 }
-      );
-    }
-
-    // Générer un message d'authentification
-    const publicKey = new PublicKey(walletAddress);
-    const authMessage = generateAuthMessage(publicKey);
-
-    return NextResponse.json({
-      success: true,
-      message: authMessage,
-    });
-  } catch (err) {
-    console.error('Erreur lors de la génération du message d\'auth:', err);
-    return NextResponse.json(
-      { error: 'Erreur interne du serveur' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

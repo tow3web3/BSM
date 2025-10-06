@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { SolanaWalletProvider } from "@/contexts/WalletContext";
+import { BSCWalletProvider } from "@/contexts/WalletContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -18,48 +18,48 @@ const interBold = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SolanaMail - Secure Blockchain Messaging",
-  description: "Send end-to-end encrypted messages using your Solana wallet. No registration required. Your wallet is your identity.",
-  keywords: ["Solana", "blockchain", "messaging", "encrypted", "web3", "crypto", "wallet", "secure messaging", "decentralized"],
-  authors: [{ name: "SolanaMail" }],
-  creator: "SolanaMail",
-  publisher: "SolanaMail",
-  metadataBase: new URL('https://solmail.vercel.app'),
+  title: "Binance Smart Mail - Secure Blockchain Messaging",
+  description: "Send end-to-end encrypted messages using your BSC wallet. No registration required. Your wallet is your identity.",
+  keywords: ["Binance Smart Chain", "BSC", "BNB", "blockchain", "messaging", "encrypted", "web3", "crypto", "wallet", "secure messaging", "decentralized", "BSM"],
+  authors: [{ name: "Binance Smart Mail" }],
+  creator: "Binance Smart Mail",
+  publisher: "Binance Smart Mail",
+  metadataBase: new URL('https://binancesmartmail.com'),
   
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://solmail.vercel.app',
-    title: 'SolanaMail - Secure Blockchain Messaging',
-    description: 'Send end-to-end encrypted messages using your Solana wallet. No registration required.',
-    siteName: 'SolanaMail',
+    url: 'https://binancesmartmail.com',
+    title: 'Binance Smart Mail - Secure Blockchain Messaging',
+    description: 'Send end-to-end encrypted messages using your BSC wallet. No registration required.',
+    siteName: 'Binance Smart Mail',
     images: [
       {
-        url: '/ChatGPT_Image_11_sept._2025_16_17_59.png',
+        url: '/BSM.png',
         width: 1200,
         height: 630,
-        alt: 'SolanaMail - Secure Blockchain Messaging',
+        alt: 'Binance Smart Mail - Secure Blockchain Messaging',
       }
     ],
   },
   
   twitter: {
     card: 'summary_large_image',
-    title: 'SolanaMail - Secure Blockchain Messaging',
-    description: 'Send end-to-end encrypted messages using your Solana wallet. No registration required.',
-    images: ['/ChatGPT_Image_11_sept._2025_16_17_59.png'],
-    creator: '@SolanaMailweb3',
-    site: '@SolanaMailweb3',
+    title: 'Binance Smart Mail - Secure Blockchain Messaging',
+    description: 'Send end-to-end encrypted messages using your BSC wallet. No registration required.',
+    images: ['/BSM.png'],
+    creator: '@BinanceSmartMail',
+    site: '@BinanceSmartMail',
   },
   
   icons: {
     icon: [
-      { url: '/ChatGPT_Image_11_sept._2025_16_17_59.png', sizes: 'any', type: 'image/png' },
-      { url: '/ChatGPT_Image_11_sept._2025_16_17_59.png', sizes: '32x32', type: 'image/png' },
-      { url: '/ChatGPT_Image_11_sept._2025_16_17_59.png', sizes: '16x16', type: 'image/png' }
+      { url: '/BSM.png', sizes: 'any', type: 'image/png' },
+      { url: '/BSM.png', sizes: '32x32', type: 'image/png' },
+      { url: '/BSM.png', sizes: '16x16', type: 'image/png' }
     ],
-    apple: '/ChatGPT_Image_11_sept._2025_16_17_59.png',
-    shortcut: '/ChatGPT_Image_11_sept._2025_16_17_59.png',
+    apple: '/BSM.png',
+    shortcut: '/BSM.png',
   },
   
   robots: {
@@ -88,13 +88,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} ${interBold.variable} antialiased bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 text-white font-bold min-h-screen`}
+        className={`${inter.variable} ${interBold.variable} antialiased bg-gradient-to-br from-black via-gray-950 to-black text-white font-bold min-h-screen`}
         suppressHydrationWarning={true}
-        style={{ backgroundColor: '#0f0f23' }}
+        style={{ backgroundColor: '#0B0E11' }}
       >
-        <SolanaWalletProvider>
+        <BSCWalletProvider>
           {children}
-        </SolanaWalletProvider>
+        </BSCWalletProvider>
       </body>
     </html>
   );
