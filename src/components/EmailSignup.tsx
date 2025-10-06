@@ -12,7 +12,6 @@ export default function EmailSignup({ className = '', variant = 'hero' }: EmailS
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const { publicKey } = useWallet();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
