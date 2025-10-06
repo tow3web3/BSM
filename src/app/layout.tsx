@@ -24,12 +24,12 @@ export const metadata: Metadata = {
   authors: [{ name: "Binance Smart Mail" }],
   creator: "Binance Smart Mail",
   publisher: "Binance Smart Mail",
-  metadataBase: new URL('https://binancesmartmail.com'),
+  metadataBase: new URL('https://bsm.center'),
   
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://binancesmartmail.com',
+    url: 'https://bsm.center',
     title: 'Binance Smart Mail - Secure Blockchain Messaging',
     description: 'Send end-to-end encrypted messages using your BSC wallet. No registration required.',
     siteName: 'Binance Smart Mail',

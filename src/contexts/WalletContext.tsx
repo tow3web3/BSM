@@ -16,7 +16,7 @@ const getAppUrl = () => {
   if (typeof window !== 'undefined') {
     return window.location.origin;
   }
-  return 'https://binance-smart-mail.onrender.com';
+  return 'https://bsm.center';
 };
 
 // Metadata for the app
@@ -55,7 +55,7 @@ const config = createConfig({
     // Coinbase Wallet
     coinbaseWallet({
       appName: 'Binance Smart Mail',
-      appLogoUrl: `${getAppUrl()}/BSM.png`,
+      appLogoUrl: 'https://bsm.center/BSM.png',
       preference: 'all'
     })
   ],
