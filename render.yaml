@@ -5,7 +5,7 @@ services:
     runtime: node
     plan: free
     region: oregon
-    buildCommand: npm install && npm run db:generate && npm run build
+    buildCommand: npm install --legacy-peer-deps && npx prisma generate && npm run build
     startCommand: npm start
     healthCheckPath: /
     envVars:
@@ -16,7 +16,7 @@ services:
           name: binance-smart-mail-db
           property: connectionString
       - key: NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
-        sync: false
+        value: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
       - key: NEXT_PUBLIC_NETWORK
         value: mainnet
       - key: NEXT_PUBLIC_BSM_CONTRACT
