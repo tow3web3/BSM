@@ -353,16 +353,15 @@ export default function Home() {
 
       {/* Futuristic Layout */}
       <div className="flex relative mt-16 md:mt-[73px]">
-        {/* Sidebar Toggle Button - Always Visible */}
+        {/* Sidebar Toggle Button - Always Visible (Desktop Only) */}
         <button
           onClick={() => {
             console.log('Toggle button clicked! Current state:', sidebarOpen, 'Auth:', authenticatedWallet);
             setSidebarOpen(!sidebarOpen);
           }}
-          className={`md:flex fixed bottom-8 z-[999] bg-gradient-to-r from-yellow-500 to-yellow-600 border-2 border-yellow-400 px-3 py-6 hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-2xl hover:shadow-yellow-500/50 items-center justify-center cursor-pointer ${
+          className={`hidden md:flex fixed bottom-8 z-[999] bg-gradient-to-r from-yellow-500 to-yellow-600 border-2 border-yellow-400 px-3 py-6 hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-2xl hover:shadow-yellow-500/50 items-center justify-center cursor-pointer ${
             sidebarOpen ? 'left-[304px] rounded-r-2xl' : 'left-0 rounded-r-2xl'
           }`}
-          style={{ display: 'flex' }}
           title={sidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
         >
           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -624,21 +623,21 @@ export default function Home() {
                 </div>
 
                 {/* Features - Alternating Layout */}
-                <div className="space-y-32 mb-24">
-                  {/* Feature 1 - Left aligned */}
-                  <div className="flex items-center justify-between max-w-6xl mx-auto">
-                    <div className="flex-1 scroll-reveal-left">
-                      <div className="max-w-lg">
+                <div className="space-y-16 md:space-y-32 mb-24 px-4">
+                  {/* Feature 1 - Left aligned on desktop, stacked on mobile */}
+                  <div className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto gap-8 md:gap-0">
+                    <div className="w-full md:flex-1 scroll-reveal-left">
+                      <div className="max-w-lg mx-auto md:mx-0">
                         <div className="flex items-center gap-4 mb-6">
-                          <div className="w-20 h-20 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 rounded-3xl flex items-center justify-center animate-glow-pulse stagger-child scroll-reveal-scale">
-                            <svg className="w-10 h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 rounded-3xl flex items-center justify-center animate-glow-pulse stagger-child scroll-reveal-scale flex-shrink-0">
+                            <svg className="w-8 h-8 md:w-10 md:h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
                     </div>
                           <div className="h-px flex-1 bg-gradient-to-r from-yellow-500/30 to-transparent stagger-child scroll-reveal"></div>
                         </div>
-                        <h3 className="text-3xl font-bold text-white mb-6 stagger-child scroll-reveal">Wallet Authentication</h3>
-                        <p className="text-xl text-gray-400 leading-relaxed mb-6 stagger-child scroll-reveal">
+                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6 stagger-child scroll-reveal">Wallet Authentication</h3>
+                        <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-4 md:mb-6 stagger-child scroll-reveal">
                       Connect with your BSC wallet. No passwords or usernames required.
                     </p>
                         <div className="flex items-center gap-3 text-yellow-500 stagger-child scroll-reveal">
@@ -647,10 +646,10 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex-1 scroll-reveal-right reveal-delay-300">
-                      <div className="relative ml-16">
+                    <div className="w-full md:flex-1 scroll-reveal-right reveal-delay-300">
+                      <div className="relative md:ml-16">
                         <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-transparent rounded-3xl blur-2xl"></div>
-                        <div className="relative card-modern p-8 border-l-4 border-yellow-500/50 animate-smooth-float">
+                        <div className="relative card-modern p-6 md:p-8 border-l-4 border-yellow-500/50 animate-smooth-float">
                           <div className="text-sm text-yellow-300 mb-2 stagger-child scroll-reveal">✓ Secure</div>
                           <div className="text-sm text-yellow-300 mb-2 stagger-child scroll-reveal">✓ Fast</div>
                           <div className="text-sm text-yellow-300 stagger-child scroll-reveal">✓ No Registration</div>
@@ -659,33 +658,34 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Feature 2 - Right aligned */}
-                  <div className="flex items-center justify-between max-w-6xl mx-auto">
-                    <div className="flex-1 scroll-reveal-left reveal-delay-200">
-                      <div className="relative mr-16">
+                  {/* Feature 2 - Right aligned on desktop, stacked on mobile */}
+                  <div className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto gap-8 md:gap-0">
+                    <div className="w-full md:flex-1 order-2 md:order-1 scroll-reveal-left reveal-delay-200">
+                      <div className="relative md:mr-16">
                         <div className="absolute inset-0 bg-gradient-to-l from-yellow-500/10 to-transparent rounded-3xl blur-2xl"></div>
-                        <div className="relative card-modern p-8 border-r-4 border-yellow-500/50 animate-smooth-float">
+                        <div className="relative card-modern p-6 md:p-8 border-r-4 border-yellow-500/50 animate-smooth-float">
                           <div className="text-sm text-yellow-300 mb-2 stagger-child scroll-reveal">🔒 Local Encryption</div>
                           <div className="text-sm text-yellow-300 mb-2 stagger-child scroll-reveal">🔐 Private Keys</div>
                           <div className="text-sm text-yellow-300 stagger-child scroll-reveal">🛡️ Zero Knowledge</div>
                         </div>
                       </div>
                     </div>
-                    <div className="flex-1 scroll-reveal-right">
-                      <div className="max-w-lg ml-auto text-right">
-                        <div className="flex items-center justify-end gap-4 mb-6">
-                          <div className="h-px flex-1 bg-gradient-to-l from-yellow-500/30 to-transparent stagger-child scroll-reveal"></div>
-                          <div className="w-20 h-20 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 rounded-3xl flex items-center justify-center animate-glow-pulse stagger-child scroll-reveal-scale">
-                            <svg className="w-10 h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-full md:flex-1 order-1 md:order-2 scroll-reveal-right">
+                      <div className="max-w-lg mx-auto md:ml-auto md:text-right">
+                        <div className="flex items-center md:justify-end gap-4 mb-6">
+                          <div className="h-px flex-1 bg-gradient-to-l from-yellow-500/30 to-transparent stagger-child scroll-reveal hidden md:block"></div>
+                          <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 rounded-3xl flex items-center justify-center animate-glow-pulse stagger-child scroll-reveal-scale flex-shrink-0">
+                            <svg className="w-8 h-8 md:w-10 md:h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
                           </div>
+                          <div className="h-px flex-1 bg-gradient-to-r from-yellow-500/30 to-transparent stagger-child scroll-reveal md:hidden"></div>
                         </div>
-                        <h3 className="text-3xl font-bold text-white mb-6 stagger-child scroll-reveal">End-to-End Encryption</h3>
-                        <p className="text-xl text-gray-400 leading-relaxed mb-6 stagger-child scroll-reveal">
+                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6 stagger-child scroll-reveal">End-to-End Encryption</h3>
+                        <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-4 md:mb-6 stagger-child scroll-reveal">
                       Messages are encrypted locally. Only you and the recipient can read them.
                     </p>
-                        <div className="flex items-center justify-end gap-3 text-yellow-500 stagger-child scroll-reveal">
+                        <div className="flex items-center md:justify-end gap-3 text-yellow-500 stagger-child scroll-reveal">
                           <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
                           <span className="text-sm font-medium">End-to-end encrypted</span>
                         </div>
@@ -693,20 +693,20 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Feature 3 - Left aligned */}
-                  <div className="flex items-center justify-between max-w-6xl mx-auto">
-                    <div className="flex-1 scroll-reveal-left">
-                      <div className="max-w-lg">
+                  {/* Feature 3 - Left aligned on desktop, stacked on mobile */}
+                  <div className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto gap-8 md:gap-0">
+                    <div className="w-full md:flex-1 scroll-reveal-left">
+                      <div className="max-w-lg mx-auto md:mx-0">
                         <div className="flex items-center gap-4 mb-6">
-                          <div className="w-20 h-20 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 rounded-3xl flex items-center justify-center animate-glow-pulse stagger-child scroll-reveal-scale">
-                            <svg className="w-10 h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 rounded-3xl flex items-center justify-center animate-glow-pulse stagger-child scroll-reveal-scale flex-shrink-0">
+                            <svg className="w-8 h-8 md:w-10 md:h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     </div>
                           <div className="h-px flex-1 bg-gradient-to-r from-yellow-500/30 to-transparent stagger-child scroll-reveal"></div>
                         </div>
-                        <h3 className="text-3xl font-bold text-white mb-6 stagger-child scroll-reveal">Lightning Fast</h3>
-                        <p className="text-xl text-gray-400 leading-relaxed mb-6 stagger-child scroll-reveal">
+                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6 stagger-child scroll-reveal">Lightning Fast</h3>
+                        <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-4 md:mb-6 stagger-child scroll-reveal">
                       Built on Binance Smart Chain for speed and reliability.
                     </p>
                         <div className="flex items-center gap-3 text-yellow-500 stagger-child scroll-reveal">
@@ -715,10 +715,10 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex-1 scroll-reveal-right reveal-delay-300">
-                      <div className="relative ml-16">
+                    <div className="w-full md:flex-1 scroll-reveal-right reveal-delay-300">
+                      <div className="relative md:ml-16">
                         <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-transparent rounded-3xl blur-2xl"></div>
-                        <div className="relative card-modern p-8 border-l-4 border-yellow-500/50 animate-smooth-float">
+                        <div className="relative card-modern p-6 md:p-8 border-l-4 border-yellow-500/50 animate-smooth-float">
                           <div className="text-sm text-yellow-300 mb-2 stagger-child scroll-reveal">⚡ 3-Second Blocks</div>
                           <div className="text-sm text-yellow-300 mb-2 stagger-child scroll-reveal">🌍 Global Network</div>
                           <div className="text-sm text-yellow-300 stagger-child scroll-reveal">💰 Low Gas Fees</div>
@@ -729,25 +729,25 @@ export default function Home() {
                 </div>
 
                 {/* Browser Extension Sneak Peek */}
-                <div id="sneak-peek" className="card-modern p-12 mb-24 relative overflow-hidden scroll-reveal-scale reveal-delay-200">
+                <div id="sneak-peek" className="card-modern p-6 md:p-12 mb-16 md:mb-24 relative overflow-hidden scroll-reveal-scale reveal-delay-200 mx-4">
                   <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-yellow-600/5"></div>
                   <div className="relative">
-                    <div className="text-center mb-12">
-                      <div className="inline-flex items-center gap-3 bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 px-6 py-3 rounded-full text-sm font-medium mb-6 stagger-child scroll-reveal">
+                    <div className="text-center mb-8 md:mb-12">
+                      <div className="inline-flex items-center gap-3 bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 px-4 md:px-6 py-2 md:py-3 rounded-full text-xs md:text-sm font-medium mb-4 md:mb-6 stagger-child scroll-reveal">
                         <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
                         Coming Soon
                       </div>
-                      <h2 className="text-4xl font-bold text-white mb-6 stagger-child scroll-reveal">Browser Extension</h2>
-                      <p className="text-xl text-gray-300 mb-4 font-light stagger-child scroll-reveal">Access Binance Smart Mail directly from your browser</p>
-                      <p className="text-gray-400 max-w-3xl mx-auto text-lg leading-relaxed stagger-child scroll-reveal">
+                      <h2 className="text-2xl md:text-4xl font-bold text-white mb-4 md:mb-6 stagger-child scroll-reveal">Browser Extension</h2>
+                      <p className="text-lg md:text-xl text-gray-300 mb-3 md:mb-4 font-light stagger-child scroll-reveal">Access Binance Smart Mail directly from your browser</p>
+                      <p className="text-gray-400 max-w-3xl mx-auto text-base md:text-lg leading-relaxed stagger-child scroll-reveal px-4">
                         Get instant notifications, quick compose, and seamless wallet integration without leaving your current tab.
                       </p>
                     </div>
                     
-                    <div className="flex justify-center mb-8">
-                      <div className="relative group">
+                    <div className="flex justify-center mb-6 md:mb-8">
+                      <div className="relative group w-full">
                         <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div className="relative bg-black/40 backdrop-blur-sm border border-yellow-500/20 rounded-2xl p-6 hover:border-yellow-500/40 transition-all duration-300">
+                        <div className="relative bg-black/40 backdrop-blur-sm border border-yellow-500/20 rounded-2xl p-3 md:p-6 hover:border-yellow-500/40 transition-all duration-300">
                           <img 
                             src="/screen.png" 
                             alt="Binance Smart Mail Browser Extension Preview" 
@@ -758,11 +758,11 @@ export default function Home() {
                     </div>
 
                     {/* Get Notified Button */}
-                    <div className="text-center mb-8">
+                    <div className="text-center mb-6 md:mb-8">
                       <EmailSignup variant="hero" />
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6 mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
                       <div className="text-center">
                         <div className="w-12 h-12 bg-yellow-500/20 border border-yellow-500/30 rounded-xl flex items-center justify-center mx-auto mb-4">
                           <svg className="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -800,22 +800,22 @@ export default function Home() {
                 </div>
 
                 {/* How It Works - Dynamic Steps */}
-                <div className="mb-24">
-                  <h2 className="text-4xl font-bold text-white mb-16 text-center scroll-reveal">How It Works</h2>
+                <div className="mb-24 px-4">
+                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 md:mb-16 text-center scroll-reveal">How It Works</h2>
                   
-                  <div className="space-y-24 max-w-6xl mx-auto">
-                    {/* Step 1 - Left aligned */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 scroll-reveal-left">
-                        <div className="max-w-lg">
-                          <div className="flex items-center gap-6 mb-8">
-                            <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center text-black text-2xl font-bold shadow-xl">
+                  <div className="space-y-12 md:space-y-24 max-w-6xl mx-auto">
+                    {/* Step 1 - Left aligned on desktop, stacked on mobile */}
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
+                      <div className="w-full md:flex-1 scroll-reveal-left">
+                        <div className="max-w-lg mx-auto md:mx-0">
+                          <div className="flex items-center gap-4 md:gap-6 mb-6 md:mb-8">
+                            <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center text-black text-xl md:text-2xl font-bold shadow-xl flex-shrink-0">
                               1
                             </div>
                             <div className="h-px flex-1 bg-gradient-to-r from-yellow-500/50 to-transparent"></div>
                           </div>
-                          <h3 className="text-2xl font-bold text-white mb-4">Connect Your Wallet</h3>
-                          <p className="text-lg text-gray-400 mb-6">
+                          <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Connect Your Wallet</h3>
+                          <p className="text-base md:text-lg text-gray-400 mb-4 md:mb-6">
                             Connect your MetaMask or BSC wallet to get started with secure messaging.
                           </p>
                           <div className="flex items-center gap-3 text-yellow-400">
@@ -826,9 +826,9 @@ export default function Home() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex-1 scroll-reveal-right reveal-delay-300">
-                        <div className="ml-16">
-                          <div className="card-modern p-8 border-l-4 border-yellow-500/50">
+                      <div className="w-full md:flex-1 scroll-reveal-right reveal-delay-300">
+                        <div className="md:ml-16">
+                          <div className="card-modern p-6 md:p-8 border-l-4 border-yellow-500/50">
                             <div className="text-yellow-300 text-sm mb-2">🔗 MetaMask</div>
                             <div className="text-yellow-300 text-sm mb-2">🔗 Trust Wallet</div>
                             <div className="text-yellow-300 text-sm">🔗 Other BSC Wallets</div>
@@ -837,30 +837,31 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Step 2 - Right aligned */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 scroll-reveal-left reveal-delay-200">
-                        <div className="mr-16">
-                          <div className="card-modern p-8 border-r-4 border-yellow-500/50">
+                    {/* Step 2 - Right aligned on desktop, stacked on mobile */}
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
+                      <div className="w-full md:flex-1 order-2 md:order-1 scroll-reveal-left reveal-delay-200">
+                        <div className="md:mr-16">
+                          <div className="card-modern p-6 md:p-8 border-r-4 border-yellow-500/50">
                             <div className="text-yellow-300 text-sm mb-2">💰 Get $BSM Tokens</div>
                             <div className="text-yellow-300 text-sm mb-2">📈 DEX Integration</div>
                             <div className="text-yellow-300 text-sm">🎯 Premium Features</div>
                           </div>
                         </div>
                       </div>
-                      <div className="flex-1 scroll-reveal-right">
-                        <div className="max-w-lg ml-auto text-right">
-                          <div className="flex items-center justify-end gap-6 mb-8">
-                            <div className="h-px flex-1 bg-gradient-to-l from-yellow-500/50 to-transparent"></div>
-                            <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center text-black text-2xl font-bold shadow-xl">
+                      <div className="w-full md:flex-1 order-1 md:order-2 scroll-reveal-right">
+                        <div className="max-w-lg mx-auto md:ml-auto md:text-right">
+                          <div className="flex items-center md:justify-end gap-4 md:gap-6 mb-6 md:mb-8">
+                            <div className="h-px flex-1 bg-gradient-to-l from-yellow-500/50 to-transparent hidden md:block"></div>
+                            <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center text-black text-xl md:text-2xl font-bold shadow-xl flex-shrink-0">
                               2
                             </div>
+                            <div className="h-px flex-1 bg-gradient-to-r from-yellow-500/50 to-transparent md:hidden"></div>
                           </div>
-                          <h3 className="text-2xl font-bold text-white mb-4">Purchase $BSM Token</h3>
-                          <p className="text-lg text-gray-400 mb-6">
+                          <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Purchase $BSM Token</h3>
+                          <p className="text-base md:text-lg text-gray-400 mb-4 md:mb-6">
                             Get $BSM tokens to unlock premium features and enhanced messaging capabilities.
                           </p>
-                          <div className="flex items-center justify-end gap-3 text-yellow-500">
+                          <div className="flex items-center md:justify-end gap-3 text-yellow-500">
                             <span className="text-sm">Available on DEX</span>
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
@@ -870,18 +871,18 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Step 3 - Left aligned */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 scroll-reveal-left">
-                        <div className="max-w-lg">
-                          <div className="flex items-center gap-6 mb-8">
-                            <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center text-black text-2xl font-bold shadow-xl">
+                    {/* Step 3 - Left aligned on desktop, stacked on mobile */}
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
+                      <div className="w-full md:flex-1 scroll-reveal-left">
+                        <div className="max-w-lg mx-auto md:mx-0">
+                          <div className="flex items-center gap-4 md:gap-6 mb-6 md:mb-8">
+                            <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center text-black text-xl md:text-2xl font-bold shadow-xl flex-shrink-0">
                               3
                             </div>
                             <div className="h-px flex-1 bg-gradient-to-r from-yellow-500/50 to-transparent"></div>
                           </div>
-                          <h3 className="text-2xl font-bold text-white mb-4">Send Encrypted Messages</h3>
-                          <p className="text-lg text-gray-400 mb-6">
+                          <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Send Encrypted Messages</h3>
+                          <p className="text-base md:text-lg text-gray-400 mb-4 md:mb-6">
                             Compose and send end-to-end encrypted messages to any BSC wallet address.
                           </p>
                           <div className="flex items-center gap-3 text-yellow-500">
@@ -892,9 +893,9 @@ export default function Home() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex-1 scroll-reveal-right reveal-delay-300">
-                        <div className="ml-16">
-                          <div className="card-modern p-8 border-l-4 border-yellow-500/50">
+                      <div className="w-full md:flex-1 scroll-reveal-right reveal-delay-300">
+                        <div className="md:ml-16">
+                          <div className="card-modern p-6 md:p-8 border-l-4 border-yellow-500/50">
                             <div className="text-yellow-300 text-sm mb-2">📝 Rich Text Support</div>
                             <div className="text-yellow-300 text-sm mb-2">🔐 AES-256 Encryption</div>
                             <div className="text-yellow-300 text-sm">⚡ Instant Delivery</div>
@@ -903,30 +904,31 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Step 4 - Right aligned */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 scroll-reveal-left reveal-delay-200">
-                        <div className="mr-16">
-                          <div className="card-modern p-8 border-r-4 border-yellow-500/50">
+                    {/* Step 4 - Right aligned on desktop, stacked on mobile */}
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
+                      <div className="w-full md:flex-1 order-2 md:order-1 scroll-reveal-left reveal-delay-200">
+                        <div className="md:mr-16">
+                          <div className="card-modern p-6 md:p-8 border-r-4 border-yellow-500/50">
                             <div className="text-yellow-300 text-sm mb-2">📬 Instant Notifications</div>
                             <div className="text-yellow-300 text-sm mb-2">🔓 Auto Decryption</div>
                             <div className="text-yellow-300 text-sm">📱 Cross-Platform</div>
                           </div>
                         </div>
                       </div>
-                      <div className="flex-1 scroll-reveal-right">
-                        <div className="max-w-lg ml-auto text-right">
-                          <div className="flex items-center justify-end gap-6 mb-8">
-                            <div className="h-px flex-1 bg-gradient-to-l from-yellow-500/50 to-transparent"></div>
-                            <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center text-black text-2xl font-bold shadow-xl">
+                      <div className="w-full md:flex-1 order-1 md:order-2 scroll-reveal-right">
+                        <div className="max-w-lg mx-auto md:ml-auto md:text-right">
+                          <div className="flex items-center md:justify-end gap-4 md:gap-6 mb-6 md:mb-8">
+                            <div className="h-px flex-1 bg-gradient-to-l from-yellow-500/50 to-transparent hidden md:block"></div>
+                            <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center text-black text-xl md:text-2xl font-bold shadow-xl flex-shrink-0">
                               4
                             </div>
+                            <div className="h-px flex-1 bg-gradient-to-r from-yellow-500/50 to-transparent md:hidden"></div>
                           </div>
-                          <h3 className="text-2xl font-bold text-white mb-4">Receive & Decrypt</h3>
-                          <p className="text-lg text-gray-400 mb-6">
+                          <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Receive & Decrypt</h3>
+                          <p className="text-base md:text-lg text-gray-400 mb-4 md:mb-6">
                             Receive encrypted messages in your inbox and decrypt them securely with your wallet.
                           </p>
-                          <div className="flex items-center justify-end gap-3 text-yellow-500">
+                          <div className="flex items-center md:justify-end gap-3 text-yellow-500">
                             <span className="text-sm">Auto-decrypt with wallet</span>
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
@@ -939,12 +941,12 @@ export default function Home() {
                 </div>
 
                 {/* Call to Action */}
-                <div className="text-center">
-                  <h3 className="text-xl font-semibold text-white mb-4">Get Started</h3>
-                  <p className="text-gray-400 mb-8 max-w-xl mx-auto">
+                <div className="text-center px-4">
+                  <h3 className="text-lg md:text-xl font-semibold text-white mb-3 md:mb-4">Get Started</h3>
+                  <p className="text-sm md:text-base text-gray-400 mb-6 md:mb-8 max-w-xl mx-auto">
                     Connect your wallet to start sending encrypted messages.
                   </p>
-                  <div className="flex items-center justify-center space-x-6 text-sm text-gray-500">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-xs md:text-sm text-gray-500">
                     <div className="flex items-center">
                       <div className="w-2 h-2 bg-gray-500 mr-2"></div>
                       <span>No Registration</span>
@@ -1148,10 +1150,10 @@ export default function Home() {
 
       {/* Paper Plane Animation */}
       {showPlaneAnimation && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-          <div className="relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="relative w-full max-w-2xl">
             {/* Flying Paper Plane */}
-            <div className="absolute -top-20 -left-20 animate-fly-plane">
+            <div className="absolute -top-20 -left-20 animate-fly-plane hidden md:block">
               <div className="w-8 h-8 text-yellow-500 transform rotate-45">
                 <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
@@ -1160,18 +1162,15 @@ export default function Home() {
             </div>
 
             {/* Contract Address Display */}
-            <div className="bg-gray-900 border border-yellow-500/50 rounded-2xl p-8 max-w-2xl mx-auto backdrop-blur-xl">
+            <div className="bg-gray-900 border border-yellow-500/50 rounded-2xl p-6 md:p-8 backdrop-blur-xl relative">
               <div className="text-center">
-                <h3 className="text-2xl font-bold text-white mb-6">Contract Address</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">Contract Address</h3>
                 
                 {/* Animated Text */}
-                <div className="relative">
-                  <div className="text-lg font-mono text-yellow-400 tracking-wider animate-typewriter break-all">
+                <div className="relative mb-6">
+                  <div className="text-sm md:text-lg font-mono text-yellow-400 tracking-wider break-all">
                     CA: 0x0000000000000000000000000000000000000000
                   </div>
-                  
-                  {/* Cursor Animation */}
-                  <div className="inline-block w-2 h-6 bg-yellow-500 ml-1 animate-blink"></div>
                 </div>
 
                 {/* Copy Button */}
@@ -1181,7 +1180,7 @@ export default function Home() {
                     setCopiedContract(true);
                     setTimeout(() => setCopiedContract(false), 2000);
                   }}
-                  className={`mt-6 px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center mx-auto ${
+                  className={`w-full md:w-auto px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center mx-auto ${
                     copiedContract 
                       ? 'bg-green-500 hover:bg-green-600 text-white' 
                       : 'bg-yellow-500 hover:bg-yellow-600 text-black'

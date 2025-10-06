@@ -86,9 +86,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark overflow-x-hidden">
       <body
-        className={`${inter.variable} ${interBold.variable} antialiased bg-gradient-to-br from-black via-gray-950 to-black text-white font-bold min-h-screen`}
+        className={`${inter.variable} ${interBold.variable} antialiased bg-gradient-to-br from-black via-gray-950 to-black text-white font-bold min-h-screen overflow-x-hidden`}
         suppressHydrationWarning={true}
         style={{ backgroundColor: '#0B0E11' }}
       >

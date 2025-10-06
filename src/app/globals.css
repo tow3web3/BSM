@@ -32,6 +32,8 @@ body {
   font-weight: 700;
   min-height: 100vh;
   overflow-x: hidden;
+  width: 100%;
+  position: relative;
 }
 
 /* Custom scrollbar - Binance style */
