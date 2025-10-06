@@ -26,6 +26,32 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
   const [decryptedMessages, setDecryptedMessages] = useState<Record<string, string>>({});
   const [decrypting, setDecrypting] = useState<Record<string, boolean>>({});
   const [expandedMessages, setExpandedMessages] = useState<Record<string, boolean>>({});
+  const [isClient, setIsClient] = useState(false);
+
+  // Load decrypted messages from localStorage on mount
+  useEffect(() => {
+    setIsClient(true);
+    if (walletAddress && typeof window !== 'undefined') {
+      const storageKey = `decryptedMessages_${walletAddress}`;
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          setDecryptedMessages(parsed);
+        } catch (e) {
+          console.error('Failed to load decrypted messages:', e);
+        }
+      }
+    }
+  }, [walletAddress]);
+
+  // Save decrypted messages to localStorage whenever they change
+  useEffect(() => {
+    if (isClient && walletAddress && Object.keys(decryptedMessages).length > 0) {
+      const storageKey = `decryptedMessages_${walletAddress}`;
+      localStorage.setItem(storageKey, JSON.stringify(decryptedMessages));
+    }
+  }, [decryptedMessages, walletAddress, isClient]);
 
   const fetchMessages = useCallback(async () => {
     try {
@@ -99,6 +125,11 @@ export default function MessageList({ walletAddress, onReply, onMessageDeleted }
       setDecryptedMessages(prev => {
         const newDecrypted = { ...prev };
         delete newDecrypted[messageId];
+        // Update localStorage
+        if (isClient && walletAddress) {
+          const storageKey = `decryptedMessages_${walletAddress}`;
+          localStorage.setItem(storageKey, JSON.stringify(newDecrypted));
+        }
         return newDecrypted;
       });
 
