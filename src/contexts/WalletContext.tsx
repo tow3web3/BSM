@@ -11,15 +11,23 @@ import { decryptMessageWithWallet } from '@/lib/encryption';
 // Web3Modal configuration
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6';
 
+// Get the correct URL for metadata
+const getAppUrl = () => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  return 'https://binance-smart-mail.onrender.com';
+};
+
 // Metadata for the app
 const metadata = {
   name: 'Binance Smart Mail',
   description: 'Secure blockchain messaging on Binance Smart Chain',
-  url: 'https://binance-smart-mail.onrender.com',
-  icons: ['https://binance-smart-mail.onrender.com/BSM.png']
+  url: getAppUrl(),
+  icons: [`${getAppUrl()}/BSM.png`]
 };
 
-// Create wagmi config with multiple connectors
+// Create wagmi config with ALL wallet connectors
 const config = createConfig({
   chains: [bsc, bscTestnet],
   transports: {
@@ -27,13 +35,27 @@ const config = createConfig({
     [bscTestnet.id]: http(),
   },
   connectors: [
+    // MetaMask and other injected wallets
     injected({ 
       shimDisconnect: true,
-      target: 'metaMask'
     }),
+    // WalletConnect for mobile wallets
+    walletConnect({ 
+      projectId, 
+      metadata,
+      showQrModal: true, // Enable QR code for mobile wallets
+      qrModalOptions: {
+        themeMode: 'dark',
+        themeVariables: {
+          '--wcm-accent-color': '#F0B90B',
+          '--wcm-background-color': '#0B0E11',
+        }
+      }
+    }),
+    // Coinbase Wallet
     coinbaseWallet({
       appName: 'Binance Smart Mail',
-      appLogoUrl: 'https://binance-smart-mail.onrender.com/BSM.png',
+      appLogoUrl: `${getAppUrl()}/BSM.png`,
       preference: 'all'
     })
   ],
@@ -76,19 +98,28 @@ function WalletContextProvider({ children }: WalletProviderProps) {
   // Initialize Web3Modal on client side
   useEffect(() => {
     if (typeof window !== 'undefined' && !modal) {
-      const web3Modal = createWeb3Modal({
-        wagmiConfig: config,
-        projectId,
-        enableAnalytics: false, // Disable to prevent analytics errors
-        enableOnramp: false,
-        themeMode: 'dark',
-        themeVariables: {
-          '--w3m-accent': '#F0B90B',
-          '--w3m-color-mix': '#0B0E11',
-          '--w3m-color-mix-strength': 40
-        }
-      });
-      setModal(web3Modal);
+      try {
+        const web3Modal = createWeb3Modal({
+          wagmiConfig: config,
+          projectId,
+          enableAnalytics: false, // Disable analytics to prevent errors
+          enableOnramp: false,
+          themeMode: 'dark',
+          themeVariables: {
+            '--w3m-accent': '#F0B90B',
+            '--w3m-color-mix': '#0B0E11',
+            '--w3m-color-mix-strength': 40
+          },
+          featuredWalletIds: [
+            'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
+            '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust Wallet
+            'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa', // Coinbase Wallet
+          ]
+        });
+        setModal(web3Modal);
+      } catch (error) {
+        console.error('Error initializing Web3Modal:', error);
+      }
     }
   }, [modal]);
 
@@ -128,7 +159,13 @@ function WalletContextProvider({ children }: WalletProviderProps) {
     if (modal) {
       modal.open();
     } else {
-      console.error('Modal not initialized yet');
+      console.warn('Web3Modal not initialized yet, retrying...');
+      // Fallback: try to initialize and open
+      setTimeout(() => {
+        if (modal) {
+          modal.open();
+        }
+      }, 500);
     }
   };
 
