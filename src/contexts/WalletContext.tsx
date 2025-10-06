@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import { createConfig, http, WagmiProvider, useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import { bsc, bscTestnet } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -15,8 +15,8 @@ const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'a1b2c3d4e
 const metadata = {
   name: 'Binance Smart Mail',
   description: 'Secure blockchain messaging on Binance Smart Chain',
-  url: typeof window !== 'undefined' ? window.location.origin : 'https://binancesmartmail.com',
-  icons: ['https://binancesmartmail.com/BSM.png']
+  url: 'https://binance-smart-mail.onrender.com',
+  icons: ['https://binance-smart-mail.onrender.com/BSM.png']
 };
 
 // Create wagmi config with multiple connectors
@@ -27,36 +27,19 @@ const config = createConfig({
     [bscTestnet.id]: http(),
   },
   connectors: [
-    injected({ shimDisconnect: true }),
-    walletConnect({ 
-      projectId, 
-      metadata,
-      showQrModal: false 
+    injected({ 
+      shimDisconnect: true,
+      target: 'metaMask'
     }),
     coinbaseWallet({
       appName: 'Binance Smart Mail',
-      appLogoUrl: 'https://binancesmartmail.com/BSM.png'
+      appLogoUrl: 'https://binance-smart-mail.onrender.com/BSM.png',
+      preference: 'all'
     })
   ],
 });
 
-// Create Web3Modal
-let modal: any;
-if (typeof window !== 'undefined') {
-  modal = createWeb3Modal({
-    wagmiConfig: config,
-    projectId,
-    enableAnalytics: true,
-    enableOnramp: false,
-    themeMode: 'dark',
-    themeVariables: {
-      '--w3m-accent': '#F0B90B',
-      '--w3m-color-mix': '#0B0E11',
-      '--w3m-color-mix-strength': 40
-    }
-  });
-}
-
+// Create Web3Modal with proper configuration
 const queryClient = new QueryClient();
 
 interface WalletContextType {
@@ -88,6 +71,26 @@ function WalletContextProvider({ children }: WalletProviderProps) {
   const { address, isConnected, isConnecting } = useAccount();
   const { disconnect: disconnectWallet } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
+  const [modal, setModal] = useState<any>(null);
+
+  // Initialize Web3Modal on client side
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !modal) {
+      const web3Modal = createWeb3Modal({
+        wagmiConfig: config,
+        projectId,
+        enableAnalytics: false, // Disable to prevent analytics errors
+        enableOnramp: false,
+        themeMode: 'dark',
+        themeVariables: {
+          '--w3m-accent': '#F0B90B',
+          '--w3m-color-mix': '#0B0E11',
+          '--w3m-color-mix-strength': 40
+        }
+      });
+      setModal(web3Modal);
+    }
+  }, [modal]);
 
   const disconnect = () => {
     disconnectWallet();
@@ -124,6 +127,8 @@ function WalletContextProvider({ children }: WalletProviderProps) {
   const openModal = () => {
     if (modal) {
       modal.open();
+    } else {
+      console.error('Modal not initialized yet');
     }
   };
 
