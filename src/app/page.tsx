@@ -19,6 +19,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedContactAddress, setSelectedContactAddress] = useState<string>('');
   const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open on desktop
+  const [copiedContract, setCopiedContract] = useState(false);
 
   // Ensure we're on client side before accessing localStorage
   useEffect(() => {
@@ -1177,14 +1178,30 @@ export default function Home() {
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText('0x0000000000000000000000000000000000000000');
-                    // You could add a toast notification here
+                    setCopiedContract(true);
+                    setTimeout(() => setCopiedContract(false), 2000);
                   }}
-                  className="mt-6 bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center mx-auto"
+                  className={`mt-6 px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center mx-auto ${
+                    copiedContract 
+                      ? 'bg-green-500 hover:bg-green-600 text-white' 
+                      : 'bg-yellow-500 hover:bg-yellow-600 text-black'
+                  }`}
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                  Copy Address
+                  {copiedContract ? (
+                    <>
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      Copy Address
+                    </>
+                  )}
                 </button>
 
                 {/* Close Button */}
