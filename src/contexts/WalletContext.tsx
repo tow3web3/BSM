@@ -35,28 +35,20 @@ const config = createConfig({
     [bscTestnet.id]: http(),
   },
   connectors: [
+    // WalletConnect for mobile wallets (must be first for proper modal)
+    walletConnect({ 
+      projectId, 
+      metadata,
+      showQrModal: false, // Let Web3Modal handle the QR code
+    }),
     // MetaMask and other injected wallets
     injected({ 
       shimDisconnect: true,
     }),
-    // WalletConnect for mobile wallets
-    walletConnect({ 
-      projectId, 
-      metadata,
-      showQrModal: true, // Enable QR code for mobile wallets
-      qrModalOptions: {
-        themeMode: 'dark',
-        themeVariables: {
-          '--wcm-accent-color': '#F0B90B',
-          '--wcm-background-color': '#0B0E11',
-        }
-      }
-    }),
     // Coinbase Wallet
     coinbaseWallet({
       appName: 'Binance Smart Mail',
-      appLogoUrl: 'https://bsm.center/BSM.png',
-      preference: 'all'
+      appLogoUrl: `${getAppUrl()}/BSM.png`,
     })
   ],
 });
@@ -102,7 +94,7 @@ function WalletContextProvider({ children }: WalletProviderProps) {
         const web3Modal = createWeb3Modal({
           wagmiConfig: config,
           projectId,
-          enableAnalytics: false, // Disable analytics to prevent errors
+          enableAnalytics: false,
           enableOnramp: false,
           themeMode: 'dark',
           themeVariables: {
@@ -114,11 +106,24 @@ function WalletContextProvider({ children }: WalletProviderProps) {
             'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
             '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust Wallet
             'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa', // Coinbase Wallet
-          ]
+          ],
+          allWallets: 'SHOW' // Show all available wallets
         });
         setModal(web3Modal);
       } catch (error) {
         console.error('Error initializing Web3Modal:', error);
+        // Fallback: try to initialize without featuredWalletIds
+        try {
+          const fallbackModal = createWeb3Modal({
+            wagmiConfig: config,
+            projectId,
+            enableAnalytics: false,
+            themeMode: 'dark',
+          });
+          setModal(fallbackModal);
+        } catch (fallbackError) {
+          console.error('Fallback initialization also failed:', fallbackError);
+        }
       }
     }
   }, [modal]);

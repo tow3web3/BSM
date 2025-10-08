@@ -48,8 +48,8 @@ export const metadata: Metadata = {
     title: 'Binance Smart Mail - Secure Blockchain Messaging',
     description: 'Send end-to-end encrypted messages using your BSC wallet. No registration required.',
     images: ['/BSM.png'],
-    creator: '@BinanceSmartMail',
-    site: '@BinanceSmartMail',
+    creator: '@bsmartmail',
+    site: '@bsmartmail',
   },
   
   icons: {

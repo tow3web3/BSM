@@ -230,7 +230,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🔗 Links
 
 - **Website**: https://binancesmartmail.com
-- **Twitter**: [@BinanceSmartMail](https://twitter.com/BinanceSmartMail)
+- **Twitter**: [@bsmartmail](https://x.com/bsmartmail)
 - **BSC Scan**: [View Contract](https://bscscan.com)
 - **Documentation**: Coming Soon
 
@@ -238,7 +238,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 Join our community to stay updated:
 
-- Twitter: [@BinanceSmartMail](https://twitter.com/BinanceSmartMail)
+- Twitter: [@bsmartmail](https://x.com/bsmartmail)
 - Telegram: Coming Soon
 - Discord: Coming Soon
 

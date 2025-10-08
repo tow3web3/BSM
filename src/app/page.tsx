@@ -6,6 +6,8 @@ import MessageList from '@/components/MessageList';
 import SendMessage from '@/components/SendMessage';
 import ContactBook from '@/components/ContactBook';
 import EmailSignup from '@/components/EmailSignup';
+import SecurityNotice from '@/components/SecurityNotice';
+import TelegramLink from '@/components/TelegramLink';
 import { useWallet } from '@/contexts/WalletContext';
 
 export default function Home() {
@@ -264,9 +266,14 @@ export default function Home() {
                 />
               </div>
               <div className="ml-2 md:ml-4 hidden md:block">
-                <h1 className="text-lg md:text-2xl font-semibold text-white tracking-tight group-hover:text-yellow-300 transition-colors duration-200">
-                  Binance Smart Mail
-                </h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-lg md:text-2xl font-semibold text-white tracking-tight group-hover:text-yellow-300 transition-colors duration-200">
+                    Binance Smart Mail
+                  </h1>
+                  <span className="px-2 py-0.5 text-[10px] font-bold text-yellow-500 bg-yellow-500/10 border border-yellow-500/30 rounded tracking-wider">
+                    v0.1
+                  </span>
+                </div>
                 <div className="text-xs text-gray-400 font-mono group-hover:text-yellow-400 transition-colors duration-200">SECURE MESSAGING</div>
               </div>
             </button>
@@ -289,7 +296,7 @@ export default function Home() {
               
               {/* Follow Us Button */}
               <a
-                href="https://x.com/BinanceSmartMail"
+                href="https://x.com/bsmartmail"
             target="_blank"
             rel="noopener noreferrer"
                 className="relative group bg-gray-900/80 border border-gray-800 px-4 py-2 hover:border-yellow-500/30 transition-colors"
@@ -544,6 +551,9 @@ export default function Home() {
                     {authenticatedWallet ? `${authenticatedWallet.slice(0, 8)}...${authenticatedWallet.slice(-8)}` : ''}
                   </div>
                 </div>
+
+                {/* Telegram Link Component */}
+                <TelegramLink />
               </div>
             )}
           </div>
@@ -588,9 +598,14 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight animate-fade-in-up animation-delay-200 opacity-0">
-                    Binance Smart Mail
-                  </h1>
+                  <div className="flex items-center justify-center gap-3 mb-4 md:mb-6">
+                    <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight animate-fade-in-up animation-delay-200 opacity-0">
+                      Binance Smart Mail
+                    </h1>
+                    <span className="px-3 py-1 text-xs md:text-sm font-bold text-yellow-500 bg-yellow-500/10 border border-yellow-500/30 rounded-lg tracking-wider animate-fade-in-up animation-delay-200 opacity-0">
+                      v0.1
+                    </span>
+                  </div>
                   <p className="text-xl md:text-2xl text-gray-300 mb-3 md:mb-4 font-light animate-fade-in-up animation-delay-400 opacity-0">
                     Secure Blockchain Messaging
                   </p>
@@ -1147,6 +1162,9 @@ export default function Home() {
           )}
         </div>
       </div>
+
+      {/* Security Notice Modal */}
+      <SecurityNotice />
 
       {/* Paper Plane Animation */}
       {showPlaneAnimation && (

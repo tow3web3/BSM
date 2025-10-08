@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isValidAddress } from '@/lib/bsc-auth';
+import { notifyNewMessage } from '@/lib/telegram-notify';
 
 export async function GET(request: NextRequest) {
   try {
@@ -90,6 +91,11 @@ export async function POST(request: NextRequest) {
         nonce,
         ephPub,
       },
+    });
+
+    // Send Telegram notification (non-blocking)
+    notifyNewMessage(toWallet, fromWallet).catch(err => {
+      console.error('Failed to send Telegram notification:', err);
     });
 
     return NextResponse.json({
