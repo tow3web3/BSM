@@ -1188,14 +1188,14 @@ export default function Home() {
                 {/* Animated Text */}
                 <div className="relative mb-6">
                   <div className="text-sm md:text-lg font-mono text-yellow-400 tracking-wider break-all">
-                    CA: 0x0000000000000000000000000000000000000000
+                    CA: 0x824b31a082e53dd5a2c25b1916096a7b66df4444
                   </div>
                 </div>
 
                 {/* Copy Button */}
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText('0x0000000000000000000000000000000000000000');
+                    navigator.clipboard.writeText('0x824b31a082e53dd5a2c25b1916096a7b66df4444');
                     setCopiedContract(true);
                     setTimeout(() => setCopiedContract(false), 2000);
                   }}
