@@ -172,9 +172,20 @@ export default function TelegramLink() {
                   <>
                     <div className="mb-6">
                       <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-4">
-                        <p className="text-sm text-blue-300">
-                          <strong>📱 Step 1:</strong> Open Telegram and find your BSM bot
+                        <p className="text-sm text-blue-300 mb-2">
+                          <strong>📱 Step 1:</strong> Open our Telegram bot
                         </p>
+                        <a
+                          href="https://t.me/binancesmartmailbot"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300"
+                        >
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.717-.962 3.792-1.362 5.031-.168.525-.502.7-.826.717-.7.064-1.232-.463-1.91-.908-1.061-.696-1.659-1.128-2.689-1.808-.119-.079-.238-.157-.356-.236-.502-.333-.886-.554-.343-1.24.157-.2 2.874-2.634 2.925-2.859.006-.028.012-.133-.05-.188s-.137-.036-.196-.022c-.084.02-1.409.896-3.982 2.633-.378.26-.721.388-.998.382-.329-.007-.96-.186-1.43-.339-.576-.188-1.033-.287-.993-.262.188-1.254.624-1.848 1.31zm0 0"/>
+                          </svg>
+                          Open @binancesmartmailbot
+                        </a>
                       </div>
                       <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-4">
                         <p className="text-sm text-blue-300">
