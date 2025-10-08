@@ -742,6 +742,57 @@ export default function Home() {
                     </div>
                   </div>
 
+                  {/* Feature 4 - Telegram Notifications (Right aligned on desktop) */}
+                  <div className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto gap-8 md:gap-0">
+                    <div className="w-full md:flex-1 order-2 md:order-1 scroll-reveal-left reveal-delay-200">
+                      <div className="relative md:mr-16">
+                        <div className="absolute inset-0 bg-gradient-to-l from-blue-500/10 to-transparent rounded-3xl blur-2xl"></div>
+                        <div className="relative card-modern p-6 md:p-8 border-r-4 border-blue-500/50 animate-smooth-float">
+                          <div className="text-sm text-blue-300 mb-2 stagger-child scroll-reveal">📱 Instant Alerts</div>
+                          <div className="text-sm text-blue-300 mb-2 stagger-child scroll-reveal">🔐 Secure Linking</div>
+                          <div className="text-sm text-blue-300 stagger-child scroll-reveal">🤖 24/7 Active</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="w-full md:flex-1 order-1 md:order-2 scroll-reveal-right">
+                      <div className="max-w-lg mx-auto md:ml-auto md:text-right">
+                        <div className="flex items-center md:justify-end gap-4 mb-6">
+                          <div className="h-px flex-1 bg-gradient-to-l from-blue-500/30 to-transparent stagger-child scroll-reveal hidden md:block"></div>
+                          <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-3xl flex items-center justify-center animate-glow-pulse stagger-child scroll-reveal-scale flex-shrink-0">
+                            <svg className="w-8 h-8 md:w-10 md:h-10 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.717-.962 3.792-1.362 5.031-.168.525-.502.7-.826.717-.7.064-1.232-.463-1.91-.908-1.061-.696-1.659-1.128-2.689-1.808-.119-.079-.238-.157-.356-.236-.502-.333-.886-.554-.343-1.24.157-.2 2.874-2.634 2.925-2.859.006-.028.012-.133-.05-.188s-.137-.036-.196-.022c-.084.02-1.409.896-3.982 2.633-.378.26-.721.388-.998.382-.329-.007-.96-.186-1.43-.339-.576-.188-1.033-.287-.993-.262.188-1.254.624-1.848 1.31zm0 0"/>
+                            </svg>
+                          </div>
+                          <div className="h-px flex-1 bg-gradient-to-r from-blue-500/30 to-transparent stagger-child scroll-reveal md:hidden"></div>
+                        </div>
+                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6 stagger-child scroll-reveal">Telegram Notifications</h3>
+                        <p className="text-lg md:text-xl text-gray-400 leading-relaxed mb-4 md:mb-6 stagger-child scroll-reveal">
+                          Never miss a message! Get instant Telegram alerts when you receive BSM messages. Link your wallet securely with our bot.
+                        </p>
+                        <div className="flex items-center md:justify-end gap-3 mb-6 stagger-child scroll-reveal">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                          <span className="text-sm font-medium text-blue-400">Real-time notifications</span>
+                        </div>
+                        <div className="flex md:justify-end stagger-child scroll-reveal">
+                          <a
+                            href="https://t.me/binancesmartmailbot"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-blue-500/20 to-blue-600/20 hover:from-blue-500/30 hover:to-blue-600/30 border border-blue-400/30 hover:border-blue-400/50 text-blue-300 px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-500/25"
+                          >
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.717-.962 3.792-1.362 5.031-.168.525-.502.7-.826.717-.7.064-1.232-.463-1.91-.908-1.061-.696-1.659-1.128-2.689-1.808-.119-.079-.238-.157-.356-.236-.502-.333-.886-.554-.343-1.24.157-.2 2.874-2.634 2.925-2.859.006-.028.012-.133-.05-.188s-.137-.036-.196-.022c-.084.02-1.409.896-3.982 2.633-.378.26-.721.388-.998.382-.329-.007-.96-.186-1.43-.339-.576-.188-1.033-.287-.993-.262.188-1.254.624-1.848 1.31zm0 0"/>
+                            </svg>
+                            <span>Connect Telegram Bot</span>
+                            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
 
                 {/* Browser Extension Sneak Peek */}
